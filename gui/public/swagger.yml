@@ -4,15 +4,6 @@ info:
   description: Expose Tinc functionality as web service.
   version: "0.1"
 
-components:
-  securitySchemes:
-    ApiKeyAuth:        # arbitrary name for the security scheme
-      type: apiKey
-      in: header       # can be "header", "query" or "cookie"
-      name: authentication  # name of the header, query parameter or cookie
-# 2) Apply the API key globally to all operations
-security:
-  - ApiKeyAuth: []     # use the same name as under securitySchemes
 
 servers:
   - url: "/api"
@@ -226,6 +217,22 @@ paths:
       summary: Export all host configuration files 
       tags:
         - Management
+      responses:
+        '200':    # status code
+          description: OK
+
+  /import:
+    post:
+      summary: import host configuration files 
+      tags:
+        - Management
+      requestBody:
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+
       responses:
         '200':    # status code
           description: OK

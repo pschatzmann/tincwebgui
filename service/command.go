@@ -2,7 +2,7 @@ package service
 
 /**
 *  Command hander for tinc commands. We determine the commands which need to be executed and
-*  execute them. 
+*  execute them.
 **/
 import (
 	"errors"
@@ -127,4 +127,19 @@ func getErrorText(t1 string, t2 string) string {
 		return t1
 	}
 	return t2
+}
+
+// ImportHandler - Process Import of file via upload
+func ImportHandler(w http.ResponseWriter, r *http.Request) {
+
+	cmd := exec.Command("tinc", "import")
+	cmd.Stdin = r.Body
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		log.Println(string(out))
+		http.Error(w, string(out), 400)
+		return
+	}
+	w.Header().Set("Content-Type", "text/plain")
+	w.Write([]byte("OK"))
 }

@@ -20,18 +20,18 @@
                     <v-icon>more_vert</v-icon>
                 </v-btn>
                 <v-list>
-                    <v-list-tile  @click="restart()">
+                    <v-list-tile  @click="action('restart')">
                         <v-list-tile-title>Restart</v-list-tile-title>
                         <v-list-tile-action/>
                     </v-list-tile>
                     
                     <v-divider inset></v-divider>
 
-                    <v-list-tile  @click="doEexport()">
+                    <v-list-tile  @click="action('export')">
                         <v-list-tile-title>Export</v-list-tile-title>
                         <v-list-tile-action/>
                     </v-list-tile>
-                    <v-list-tile  @click="exportAll()">
+                    <v-list-tile  @click="action('export-all')()">
                         <v-list-tile-title>Export All</v-list-tile-title>
                         <v-list-tile-action/>
                     </v-list-tile>
@@ -52,12 +52,12 @@
                     </v-list-tile>
                     
                     <v-divider inset></v-divider>
-                    <v-list-tile  @click="purge()">
+                    <v-list-tile  @click="action('purge')">
                         <v-list-tile-title>Purge unreachable Nodes</v-list-tile-title>
                         <v-list-tile-action/>
                     </v-list-tile>
 
-                    <v-list-tile  @click="generateKeys()">
+                    <v-list-tile  @click="action('generate-keys')">
                         <v-list-tile-title>(Re)generate Keys</v-list-tile-title>
                         <v-list-tile-action/>
                     </v-list-tile>
@@ -84,16 +84,19 @@
         data: () => ({
             networks : [],
             network: null,
-            buttonOn: {
-                on: true,
-                color: 'green',
-                icon: 'toggle_on'
+            buttons: { 
+                buttonOn: {
+                    on: true,
+                    color: 'green',
+                    icon: 'toggle_on'
+                },
+                buttonOff: {
+                    on: false,
+                    color: 'red',
+                    icon: 'toggle_off'
+                }
             },
-            buttonOff: {
-                on: false,
-                color: 'red',
-                icon: 'toggle_off'
-            }
+            tincIsActive: null
         }),
 
         methods: {
@@ -110,42 +113,6 @@
                 }, function(err) {
                     this.$store.dispatch('setError', err)
                 });
-            },
-
-            start() {
-                return this.action('start')
-            },
-
-            stop() {
-                return this.action('stop')
-            },
-
-            restart() {
-                return this.action('restart')
-            },
-
-            doExport(){
-
-            },
-            
-            doImport(){
-
-            },
-
-            invite() {
-
-            },
-
-            jointInvite() {
-
-            },
-
-            purge() {
-                return this.action('purge')
-            },
-
-            generateKeys() {
-                return this.action('generateKeys')
             }
 
         }, 
@@ -163,15 +130,23 @@
         },
 
         mounted() {
-                WebServices.getNetworks().then(function(result) {
-                    this.networks = result
-                    // select first network
-                    if (this.networks.length>=1){
-                        this.network = this.networks[0]
-                    }
-                }, function(err) {
-                    this.$store.dispatch('setError', err)
-                });
+            WebServices.getNetworks().then(result => {
+                this.networks = result
+                // select first network
+                if (this.networks.length>=1){
+                    this.network = this.networks[0]
+                    // start tinc
+                    WebServices.action('start').then( result => {
+                        tincIsActive = true
+                    }, err => {
+                        this.$store.dispatch('setError', err)
+                        tincIsActive = false
+                    })
+                }
+            }, err => {
+                this.$store.dispatch('setError', err)
+                tincIsActive = false
+            });
         }
     }
 

@@ -10,8 +10,11 @@ import (
 //RegisterAPIServices - defines the handler functions for the /api/ services
 func RegisterAPIServices(path string, r *mux.Router) {
 	api := r.PathPrefix(path).Subrouter()
-	// simple commands
+
 	api.HandleFunc("/ping", Ping).Methods("GET")
+	api.HandleFunc("/import", ImportHandler).Methods("POST")
+
+	// simple commands
 	api.HandleFunc("/fsck", NewCommand("fsck").Handler()).Methods("GET")
 	api.HandleFunc("/parameters", TincParameters).Methods("GET")
 	api.HandleFunc("/stop", NewCommand("stop").Handler()).Methods("POST")
@@ -56,4 +59,6 @@ func RegisterAPIServices(path string, r *mux.Router) {
 	api.HandleFunc("/parameter", NewCommand4(CommandFormatter, "name", "value", "add").Handler()).Methods("POST")
 	api.HandleFunc("/parameter", NewCommand4(CommandFormatter, "name", "value", "set").Handler()).Methods("PUT")
 
+
 }
+
