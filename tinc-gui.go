@@ -76,8 +76,9 @@ func fileExists(path string) bool {
 // determines the path for the javascript resources. It might be in the actual directory or in the dist subdirectory
 func getPath() string {
 	path := ""
-	// determine path of content
-	if fileExists("./index.html") {
+	if len(os.Args) >= 3 {
+		path = os.Args[2]
+	} else if fileExists("./index.html") {
 		path = "."
 	} else if fileExists("dist/index.html") {
 		path = "dist"
