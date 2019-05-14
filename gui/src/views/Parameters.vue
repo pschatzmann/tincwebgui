@@ -50,7 +50,7 @@ export default {
             if (this.expanded) {
                 this.items = this.allItems
             } else {
-                this.items = this.allItems.data.filter(r => r.Value!="-")
+                this.items = this.allItems.filter(r => r.Value!="-" )
             }
         }
     },
