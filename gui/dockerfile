@@ -1,0 +1,42 @@
+#
+# Build tinc 1.1 
+#
+FROM alpine:latest as build
+RUN apk update && apk add bash alpine-sdk autoconf automake texinfo linux-headers
+RUN apk add libpcap-dev lzo-dev openssl-dev readline-dev zlib-dev ncurses-dev
+WORKDIR /root
+RUN git clone  git://tinc-vpn.org/tinc --branch 1.1
+WORKDIR /root/tinc
+RUN autoreconf --install
+RUN autoconf
+RUN ./configure --prefix=/usr --enable-jumbograms --enable-tunemu --sysconfdir=/etc --localstatedir=/var
+RUN make && make install
+
+#
+# Build tinc-web-gui 
+#
+FROM golang:alpine as gui-build
+RUN apk update && apk add bash make git nodejs npm
+RUN mkdir -p /opt/tinc-gui
+WORKDIR /opt/tinc-gui
+ADD . /opt/tinc-gui/
+RUN make
+
+#
+# Build final consolidated tinc 1.1 image with web-guy 
+#
+FROM alpine:latest as tinc
+RUN apk add bash libpcap lzo openssl readline zlib ncurses
+WORKDIR /usr/sbin
+COPY --from=build /usr/sbin/tinc .
+COPY --from=build /usr/sbin/tincd .
+WORKDIR /opt/tinc-gui
+RUN mkdir -p /opt/tinc-gui/dist
+COPY --from=gui-build /opt/tinc-gui/dist ./dist/
+COPY --from=gui-build /opt/tinc-gui/tinc-gui .
+ENV NODENAME=${HOST}
+ADD config/* /etc/tinc/
+EXPOSE 655/tcp 655/udp 8000
+VOLUME /etc/tinc
+WORKDIR /etc/tinc
+CMD /etc/tinc/run.sh

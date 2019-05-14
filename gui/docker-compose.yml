@@ -1,0 +1,25 @@
+version: '3'
+services:
+  tinc:
+    image: tinc
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    environment:
+      - NODENAME=${HOSTNAME}
+      - INTERFACE=tun0
+      - ADDRESS_FAMILY=ipv4
+#      - ADDRESS=192.168.43.190
+      - SUBNET=172.16.0.0/24
+      - VPN_IP=172.16.0.1
+      - AUTO_CONNECT=yes
+      - LOG_LEVEL=3
+      - MODE=router
+      - CONNECT_TO=docker
+    ports:
+      - 8000:8000
+      - 655/tcp
+      - 655/udp
+    container_name: tinc
+
