@@ -1,11 +1,15 @@
 <template>
-    <v-container fluid>
-        <v-card>
-            <v-container fluid>
-                <div ref="sigmaContainer" id='sigmaContainer'/>
-            </v-container>
-        </v-card>
-    </v-container>
+    <div>
+        <v-alert :value="error!=null" type="error">{{error}}</v-alert>
+
+        <v-container fluid>
+            <v-card>
+                <v-container fluid>
+                    <div ref="sigmaContainer" id='sigmaContainer'/>
+                </v-container>
+            </v-card>
+        </v-container>
+    </div>
 </template>
 
 
@@ -49,6 +53,12 @@ export default {
         }
 
     }),
+
+    computed: {
+        error() {
+            return this.$store.state.error
+        },
+    },
 
     methods: {
         setupTestData(){

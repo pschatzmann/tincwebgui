@@ -1,21 +1,26 @@
 <template>
-    <v-container fluid>
+    <div>
         <v-alert :value="error!=null" type="error">{{error}}</v-alert>
+        <v-container fluid>
 
-        <v-card>
-                <v-data-table
-                    :headers="headers"
-                    :items="items"
-                    hide-actions=true
+            <v-card>
+                    <v-data-table
+                        :headers="headers"
+                        :items="items"
+                        hide-actions=true
 
-                    class="elevation-1">
-                    <template v-slot:items="props">
-                    <td>{{ props.item.Name }}</td>
-                    <td>{{ props.item.Value }}</td>
-                    </template>
-                </v-data-table>
-        </v-card>
-    </v-container>
+                        class="elevation-1">
+                        <template v-slot:items="props">
+                        <td>{{ props.item.Name }}</td>
+                        <td>{{ props.item.Value }}</td>
+                        </template>
+                    </v-data-table>
+            </v-card>
+            <v-btn  v-on:click="toggleExpanded()" fab dark small color="green">
+                <v-icon dark>{{iconName}}</v-icon>
+            </v-btn>  
+        </v-container>
+    </div>
 </template>
 
 
@@ -31,17 +36,39 @@ export default {
           { text: 'Value', value: 'Value' },
         ],
         items: [],
+        allItems: [],
+        expanded: false
     }),
+
+    methods: {
+        toggleExpanded(){
+            this.expanded = !this.expanded
+            this.setItems()
+        }, 
+
+        setItems() {
+            if (this.expanded) {
+                this.items = this.allItems
+            } else {
+                this.items = this.allItems.data.filter(r => r.Value!="-")
+            }
+        }
+    },
 
     computed: {
         error() {
             return this.$store.state.error
         },
+
+        iconName() {
+            return this.expanded ? "unfold_less" : "unfold_more"
+        }
     },
 
     mounted() {
         WebServices.getParameters().then(result => {
-            this.items = result.data
+            this.allItems = result.data
+            this.setItems()
         },error => {
            this.$store.dispatch('setError', error)
         })

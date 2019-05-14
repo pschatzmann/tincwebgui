@@ -1,16 +1,18 @@
 <template>
-    <v-container id='performanceContainer' fluid>
-        <v-card>
-            <v-container fluid>
-                <area-chart :stacked="true" :refresh="5" :data="data" legend="right"  title="Traffic In (bytes)"/>
-            </v-container>
-            <v-container fluid>
-                <area-chart :stacked="true" :refresh="5" :data="data" legend="right" title="Traffic Out (bytes)"/>
-            </v-container>
-        </v-card>
-    </v-container>
+    <div>
+        <v-alert :value="error!=null" type="error">{{error}}</v-alert>
+        <v-container id='performanceContainer' fluid>
+            <v-card>
+                <v-container fluid>
+                    <area-chart :stacked="true" :refresh="5" :data="data" legend="right"  title="Traffic In (bytes)"/>
+                </v-container>
+                <v-container fluid>
+                    <area-chart :stacked="true" :refresh="5" :data="data" legend="right" title="Traffic Out (bytes)"/>
+                </v-container>
+            </v-card>
+        </v-container>
+    </div>
 </template>
-
 
 <script>
 import Vue from 'vue'
@@ -27,6 +29,12 @@ export default {
         ]
 
     }),
+    
+    computed: {
+        error() {
+            return this.$store.state.error
+        },
+    },
 }
 
 </script>

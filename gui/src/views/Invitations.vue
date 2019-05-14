@@ -3,24 +3,27 @@
 **/
 
 <template>
-    <v-container fluid>
-        <v-card>
-                <v-data-table
-                    :headers="headers"
-                    :items="items"
-                    hide-actions=true
+    <div>
+        <v-alert :value="error!=null" type="error">{{error}}</v-alert>
+        <v-container fluid>
+            <v-card>
+                    <v-data-table
+                        :headers="headers"
+                        :items="items"
+                        hide-actions=true
 
-                    class="elevation-1">
-                    <template v-slot:items="props">
-                    <td>{{ props.item.Invitation }}</td>
-                    <td>{{ props.item.Name }}</td>
-                    </template>
-                </v-data-table>
-        </v-card>
-        <v-btn fab dark small color="red">
-            <v-icon dark>add</v-icon>
-        </v-btn>   
-    </v-container>
+                        class="elevation-1">
+                        <template v-slot:items="props">
+                        <td>{{ props.item.Invitation }}</td>
+                        <td>{{ props.item.Name }}</td>
+                        </template>
+                    </v-data-table>
+            </v-card>
+            <v-btn fab dark small color="red">
+                <v-icon dark>add</v-icon>
+            </v-btn>   
+        </v-container>
+    </div>
 </template>
 
 <script>
@@ -35,6 +38,12 @@
             ],
             items: []
         }),
+
+        computed: {
+            error() {
+                return this.$store.state.error
+            },
+        },
 
         mounted() {
             WebServices.getInvitations().then(result => {
