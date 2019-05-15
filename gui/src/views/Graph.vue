@@ -1,7 +1,6 @@
 <template>
     <div>
         <v-alert :value="error!=null" type="error">{{error}}</v-alert>
-
         <v-container fluid>
             <v-card>
                 <v-container fluid>
@@ -54,11 +53,13 @@ export default {
 
         tooltipSetup : {
             node: {
+                autoadjust: true,
                 show: 'overNode',
                 hide: 'outNode',
                 renderer: null
             },
             edge: {
+                autoadjust: true,
                 show: 'overEdge',
                 hide: 'outEdge',
                 renderer: null
@@ -81,8 +82,8 @@ export default {
         // Tooltip renderer
         tooltipRenderer(obj, v1, v2){
             console.log(obj,v1,v2)
-            if (obj.ref) {
-                var ref = obj['ref']
+            var ref = obj['ref']
+            if (ref) {
                 return this.makeTableHTML(Object.entries(ref))
             } else {
                 return JSON.stringify(obj)
@@ -95,7 +96,11 @@ export default {
             for(var i=0; i<myArray.length; i++) {
                 result += "<tr>";
                 for(var j=0; j<myArray[i].length; j++){
-                    result += "<td>"+myArray[i][j]+"</td>";
+                    if (j==0){
+                        result += "<td align='right'>"+firstCharAsCaps(myArray[i][j])+":</td>";
+                    } else {
+                        result += "<td>"+myArray[i][j]+"</td>";
+                    }
                 }
                 result += "</tr>";
             }
@@ -103,6 +108,9 @@ export default {
             return result;
         },
 
+        firstCharAsCaps(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        },   
 
         setup() {
             const thisCtx = this
@@ -156,15 +164,16 @@ export default {
     .sigma-tooltip {
         max-width: 240px;
         max-height: 280px;
-        background-color: black;
+        background-color: #AAAAAA;
         border: 1px solid ;
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
         border-radius: 6px;
         cursor: auto;
         font-family: Arial;
         font-size: 12px;
-        color: white;
-        font-weight: bold 
+        color: black;
+        font-weight: bold;
+        padding: 20px 
     }
 
 </style>
