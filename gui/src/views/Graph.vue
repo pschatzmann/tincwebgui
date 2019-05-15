@@ -82,7 +82,8 @@ export default {
         tooltipRenderer(obj, v1, v2){
             console.log(obj,v1,v2)
             if (obj.ref) {
-                return this.makeTableHTML(obj.ref.entries())
+                var ref = obj['ref']
+                return this.makeTableHTML(Object.entries(ref))
             } else {
                 return JSON.stringify(obj)
             }
