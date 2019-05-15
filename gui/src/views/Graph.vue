@@ -16,6 +16,7 @@
 <script>
 import sigma from 'sigma'
 import WebServices from "@/services/WebServices"
+import '@/services/sigma.plugins.tooltips.js'
 
 export default {
     name: "graph",
@@ -49,15 +50,25 @@ export default {
             fixedScaling: true,
             zoomMin: 1,
             zoomMax: 1
+        },
 
-
-       },
+        tooltipSetup : {
+            node: {
+                show: 'overNode',
+                hide: 'outNode',
+                renderer: this.tooltipRenderer
+            },
+            edge: {
+                show: 'overEdge',
+                hide: 'outEdge',
+                renderer: this.tooltipRenderer
+            },  
+        },
 
         renderer : {
             container: null,
             type: 'canvas'
-        }
-
+        },
     }),
 
     computed: {
@@ -67,55 +78,45 @@ export default {
     },
 
     methods: {
-        // setupTestData(){
-        //     var i,
-        //     N = 20,
-        //     E = 50
+        // Tooltip renderer
+        tooltipRenderer(obj, v1, v2){
+            console.log(obj,v1,v2)
+            if (obj.ref) {
+                return this.makeTableHTML(obj.ref.entries())
+            } else {
+                return JSON.stringify(obj)
+            }
+        },
 
-        //     // Generate a random graph:
-        //     for (i = 0; i < N; i++){
-        //         this.graph.nodes.push({
-        //             id: 'n' + i,
-        //             label: 'Node ' + i,
-        //             size: 1,
-        //             color: '#666'
-        //         });
-        //     }
+        // convert 
+        makeTableHTML(myArray) {
+            var result = "<table>";
+            for(var i=0; i<myArray.length; i++) {
+                result += "<tr>";
+                for(var j=0; j<myArray[i].length; j++){
+                    result += "<td>"+myArray[i][j]+"</td>";
+                }
+                result += "</tr>";
+            }
+            result += "</table>";
+            return result;
+        },
 
-        //     // allocate on cirle
-        //     this.graph.nodes.forEach(function(node, i, a) {
-        //         node.x = Math.cos(Math.PI * 2 * i / a.length);
-        //         node.y = Math.sin(Math.PI * 2 * i / a.length);
-        //     });
-
-        //     for (i = 0; i < E; i++) {
-        //         var sourceId = 'n'+Math.floor(Math.random() * N )
-        //         var targetId = 'n'+Math.floor(Math.random() * N)
-        //         if (sourceId!=targetId){
-        //             this.graph.edges.push({
-        //                 id: 'e' + i,
-        //                 label: 'Edge ' + i,
-        //                 source: sourceId,
-        //                 target: targetId,
-        //                 size: 10,
-        //                 color: '#ccc',
-        //             });
-        //         }
-        //     }
-        //     renderGraph()
-        // },
 
         setup() {
+            const thisCtx = this
             WebServices.getNodes().then(result => {
-                this.resultData.nodes = result.data
+                thisCtx.resultData.nodes = result.data
                 // convert to display format
-                this.graph.nodes = this.resultData.nodes.map(n => {id: n.id; label: n.name; color: '#666'; size: 1 })
+                thisCtx.graph.nodes = thisCtx.resultData.nodes.map(n => {
+                    return {id: n.id, label: n.name, color: '#666', size: 1, ref: n }
+                })
                 // allocate on cirle
-                this.graph.nodes.forEach(function(node, i, a) {
+                thisCtx.graph.nodes.forEach(function(node, i, a) {
                     node.x = Math.cos(Math.PI * 2 * i / a.length);
                     node.y = Math.sin(Math.PI * 2 * i / a.length);
                 });                
-                renderGraph()
+                thisCtx.renderGraph()
 
             },error => {
                 this.$store.dispatch('setError', error)
@@ -128,17 +129,12 @@ export default {
 
             // setup sigma
             var s = new sigma({ renderer: this.renderer, settings: this.settings})
+
+            // setup tooltips
+            sigma.plugins.tooltips(s, s.renderers[0],this.tooltipSetup);
+
             s.graph.read(this.graph);
             s.refresh();
-
-            s.bind('overEdge',(e)=>{ 
-            // e.data.edge.color = '#ff6347'
-                console.log(e.data);
-            }) 
-
-            s.bind('clickEdge', function(e) {            
-                console.log(e.data);
-            });
         }
     },
 
@@ -153,4 +149,19 @@ export default {
 #sigmaContainer {
     height:80vh;
 }
+
+.sigma-tooltip {
+  max-width: 240px;
+  max-height: 280px;
+  background-color: black;
+  border: 1px solid ;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+  cursor: auto;
+  font-family: Arial;
+  font-size: 12px;
+  color: white;
+  font-weight: bold 
+}
+
 </style>
