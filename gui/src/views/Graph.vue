@@ -97,7 +97,7 @@ export default {
                 result += "<tr>";
                 for(var j=0; j<myArray[i].length; j++){
                     if (j==0){
-                        result += "<td align='right'>"+firstCharAsCaps(myArray[i][j])+":</td>";
+                        result += "<td align='right'>"+this.firstCharAsCaps(myArray[i][j])+": </td>";
                     } else {
                         result += "<td>"+myArray[i][j]+"</td>";
                     }
@@ -109,7 +109,7 @@ export default {
         },
 
         firstCharAsCaps(string) {
-            return string.charAt(0).toUpperCase() + string.slice(1);
+            return (string.charAt(0).toUpperCase() + string.slice(1)).trim();
         },   
 
         setup() {
