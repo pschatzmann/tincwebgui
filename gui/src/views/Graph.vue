@@ -109,7 +109,7 @@ export default {
             WebServices.getNodes().then(result => {
                 this.data.nodes = result.data
                 // convert to display format
-                this.graph.nodes = result.data.map(n => {id: n.id; label: n.name; color: '#666'; size: 1 })
+                this.graph.nodes = this.data.nodes.map(n => {id: n.id; label: n.name; color: '#666'; size: 1 })
                 // allocate on cirle
                 this.graph.nodes.forEach(function(node, i, a) {
                     node.x = Math.cos(Math.PI * 2 * i / a.length);
