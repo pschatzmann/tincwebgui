@@ -40,8 +40,8 @@ func RegisterAPIServices(path string, r *mux.Router) {
 	api.HandleFunc("/connections", NewCommand2(ConnectionsFormatter, "dump", "connections").Handler()).Methods("GET")
 	api.HandleFunc("/subnets", NewCommand2(SubnetsFormatter, "dump", "subnets").Handler()).Methods("GET")
 	api.HandleFunc("/edges", NewCommand2(ArrayFormatter, "dump", "edges").Handler()).Methods("GET")
-	api.HandleFunc("/graph", NewCommand2(JSONFormatter, "dump", "graph").Handler()).Methods("GET")
-	api.HandleFunc("/digraph", NewCommand2(JSONFormatter, "dump", "digraph").Handler()).Methods("GET")
+	api.HandleFunc("/graph", NewCommand2(DottyFormatter, "dump", "graph").Handler()).Methods("GET")
+	api.HandleFunc("/digraph", NewCommand2(DottyFormatter, "dump", "digraph").Handler()).Methods("GET")
 
 	api.HandleFunc("/info", NewCommand3(InfoFormatter, "name", "node").Handler()).Methods("GET")
 

@@ -23,6 +23,10 @@ const WebServices = {
         return await axios.get(this.url + '/api/parameters')
     },
 
+    async getNodes() {
+        return await axios.get(this.url + '/api/nodes')
+    },
+
 
     // start, stop, restart, purge, generate-keys
 

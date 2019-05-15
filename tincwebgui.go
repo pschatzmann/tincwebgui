@@ -18,8 +18,13 @@ import (
 )
 
 func main() {
-	auth.Setup()
+	address := "localhost:8000"
+	if len(os.Args) >= 2 {
+		address = os.Args[1]
+	}
 	r := mux.NewRouter()
+	// setup authrizations
+	auth.SetupGoth(address, r)
 
 	// Register API services
 	service.RegisterAPIServices("/api/", r)
@@ -29,10 +34,6 @@ func main() {
 	log.Println("Path is ", path)
 	r.PathPrefix("/").Handler(htmlHandler(path))
 	// listen on localhost:8000 or as specified in the arg 1
-	address := "localhost:8000"
-	if len(os.Args) >= 2 {
-		address = os.Args[1]
-	}
 
 	srv := &http.Server{
 		Handler: r,

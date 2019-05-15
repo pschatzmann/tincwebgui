@@ -72,13 +72,21 @@ paths:
           description: OK
   /graph:
     get:
-      summary: Dump a list of the graph of the VPN in dotty format
+      summary: Dump a graph of the VPN in dotty format
       tags:
         - Information
       responses:
         '200':    # status code
           description: OK
 
+  /digraph:
+    get:
+      summary: Dump a digraph of the VPN in dotty format
+      tags:
+        - Information
+      responses:
+        '200':    # status code
+          description: OK
   /pid:
     get:
       summary: Show PID of currently running tincd

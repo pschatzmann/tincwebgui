@@ -10,15 +10,17 @@ import (
 	"net/http"
 	"os"
 	"strings"
+
+	"github.com/gorilla/mux"
 )
 
-type auth struct {
+type Auth struct {
 	password       string
 	passwordActive bool
 	serviceActive  bool
 }
 
-var authValue = auth{"", false, false}
+var authValue = Auth{"", false, false}
 
 // Generate - Generates a new Password
 func Generate() string {
@@ -54,7 +56,7 @@ func checkAuthorization(pwd string) error {
 }
 
 // Setup - sets up the password handling from the Env variables PASSWORD-ACTIVE and PASSWORD
-func Setup() auth {
+func Setup(host string, r *mux.Router) Auth {
 	serviceActiveParameter := os.Getenv("SERVICE_ACTIVE")
 	if serviceActiveParameter != "false" {
 		authValue.serviceActive = true

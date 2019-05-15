@@ -7,7 +7,6 @@ package service
 import (
 	"encoding/json"
 	"errors"
-	"log"
 	"strings"
 )
 
@@ -28,21 +27,21 @@ func JSONFormatter(out []byte) ([]byte, Mime, error) {
 	return []byte(result), "application/json", nil
 }
 
+// DottyFormatter - just converts the bytes to a string and returns it as application/dotty
+func DottyFormatter(out []byte) ([]byte, Mime, error) {
+	str := string(out[:])
+	result := strings.TrimSpace(str)
+	return []byte(result), "application/dotty", nil
+}
+
 // ArrayFormatter - converts the result into an json array of strings
 func ArrayFormatter(out []byte) ([]byte, Mime, error) {
-	// split result string to array
-	str := string(out[:])
-	// handle new lines for windowns and linux
-	str = strings.Replace(str, "\r\n", "\n", -1)
-	// remove empty lines
-	str = strings.TrimSpace(str)
-	// convert to array
-	var array = strings.Split(str, "\n")
+	// convert to string array
+	array := toArray(out)
 	result, err := json.Marshal(array)
 	if err != nil {
 		return nil, "", err
 	}
-
 	// return result as json array
 	return []byte(result), "application/json", nil
 }
@@ -55,14 +54,8 @@ type Invitation struct {
 
 // InvitationsFormatter - converts the result into an json array of strings
 func InvitationsFormatter(out []byte) ([]byte, Mime, error) {
-	// split result string to array
-	str := string(out[:])
-	// handle new lines for windowns and linux
-	str = strings.Replace(str, "\r\n", "\n", -1)
-	// remove empty lines
-	str = strings.TrimSpace(str)
 	// convert to array
-	var array = strings.Split(str, "\n")
+	array := toArray(out)
 
 	// build Invitations
 	resultArray := make([]Invitation, 0)
@@ -129,12 +122,8 @@ func ConnectionsFormatter(out []byte) ([]byte, Mime, error) {
 //Edges:
 //Subnets:
 func InfoFormatter(out []byte) ([]byte, Mime, error) {
-	// split result string to array
-	str := string(out[:])
-	// handle new lines for windowns and linux
-	str = strings.Replace(str, "\r\n", "\n", -1)
 	// convert to array
-	var array = strings.Split(str, "\n")
+	array := toArray(out)
 
 	// build Invitations
 	resultMap := map[string]string{}
@@ -179,22 +168,10 @@ func parseRXTX(in string) (string, string) {
 }
 
 // parsingFormatter - converts the result into an json array of strings based on the parsing fields
-func parsingFormatter(fields []string, out []byte) ([]byte, Mime, error) {
-	// split result string to array
-	str := string(out[:])
-	// handle new lines for windowns and linux
-	str = strings.Replace(str, "\r\n", "\n", -1)
-	// remove empty lines
-	str = strings.TrimSpace(str)
-	// convert to array
-	var array = strings.Split(str, "\n")
-
-	// build parsed result array
-	resultArray := make([]map[string]string, 0)
-	for _, line := range array {
-		resultMap := parseLine(line, fields)
-		resultArray = append(resultArray, resultMap)
-	}
+func parsingFormatter(fields []string, in []byte) ([]byte, Mime, error) {
+	// Parse the input string
+	str := string(in[:])
+	resultArray := Parse(fields, str)
 
 	// convert to Json
 	result, err := json.Marshal(resultArray)
@@ -206,39 +183,13 @@ func parsingFormatter(fields []string, out []byte) ([]byte, Mime, error) {
 	return []byte(result), "application/json", nil
 }
 
-//parseLine - Simple parser which splits the line by attribute names
-func parseLine(line string, attributes []string) map[string]string {
-	// add start and end of line delimter
-	lineEx := attributes[0] + " " + line + ";"
-	attributes = append(attributes, ";")
-
-	// process all attributes
-	result := map[string]string{}
-	for pos := range attributes[1:len(attributes)] {
-		var startName = attributes[pos-1]
-		var endName = attributes[pos]
-		// split words
-		lineArray := strings.Fields(lineEx)
-		var startPos = find(lineArray, startName)
-		var endPos = find(lineArray, endName)
-		if startPos > endPos {
-			// add value to map
-			attributeValue := strings.Join(lineArray[startPos:endPos], " ")
-			result[startName] = attributeValue
-		} else {
-			log.Println("Warning in parseLine - The field was ignored:", startName)
-		}
-	}
-	return result
-}
-
-// Find returns the smallest index i at which x == a[i],
-// or len(a) if there is no such index.
-func find(a []string, x string) int {
-	for i, n := range a {
-		if x == n {
-			return i
-		}
-	}
-	return -1
+func toArray(out []byte) []string {
+	str := string(out[:])
+	// handle new lines for windowns and linux
+	str = strings.Replace(str, "\r\n", "\n", -1)
+	// remove empty lines
+	str = strings.TrimSpace(str)
+	// convert to array
+	var array = strings.Split(str, "\n")
+	return array
 }
