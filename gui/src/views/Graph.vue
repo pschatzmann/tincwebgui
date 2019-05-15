@@ -16,7 +16,7 @@
 <script>
 import sigma from 'sigma'
 import WebServices from "@/services/WebServices"
-import '@/services/sigma.plugins.tooltips.js'
+import '@/plugins/sigma.plugins.tooltips.js'
 
 export default {
     name: "graph",
@@ -56,12 +56,12 @@ export default {
             node: {
                 show: 'overNode',
                 hide: 'outNode',
-                renderer: this.tooltipRenderer
+                renderer: null
             },
             edge: {
                 show: 'overEdge',
                 hide: 'outEdge',
-                renderer: this.tooltipRenderer
+                renderer: null
             },  
         },
 
@@ -131,6 +131,8 @@ export default {
             var s = new sigma({ renderer: this.renderer, settings: this.settings})
 
             // setup tooltips
+            this.tooltipSetup.node.renderer = this.tooltipRenderer
+            this.tooltipSetup.edge.renderer = this.tooltipRenderer
             sigma.plugins.tooltips(s, s.renderers[0],this.tooltipSetup);
 
             s.graph.read(this.graph);
@@ -146,22 +148,22 @@ export default {
 </script>
 
 <style>
-#sigmaContainer {
-    height:80vh;
-}
+    #sigmaContainer {
+        height:80vh;
+    }
 
-.sigma-tooltip {
-  max-width: 240px;
-  max-height: 280px;
-  background-color: black;
-  border: 1px solid ;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-  border-radius: 6px;
-  cursor: auto;
-  font-family: Arial;
-  font-size: 12px;
-  color: white;
-  font-weight: bold 
-}
+    .sigma-tooltip {
+        max-width: 240px;
+        max-height: 280px;
+        background-color: black;
+        border: 1px solid ;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        border-radius: 6px;
+        cursor: auto;
+        font-family: Arial;
+        font-size: 12px;
+        color: white;
+        font-weight: bold 
+    }
 
 </style>
