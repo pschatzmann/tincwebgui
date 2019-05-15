@@ -24,7 +24,8 @@ func main() {
 	}
 	r := mux.NewRouter()
 	// setup authrizations
-	auth.SetupGoth(address, r)
+	auth.Setup(address, r)
+	//auth.SetupGoth(address, r)
 
 	// Register API services
 	service.RegisterAPIServices("/api/", r)

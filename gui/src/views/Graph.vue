@@ -15,6 +15,7 @@
 
 <script>
 import sigma from 'sigma'
+import WebServices from "@/services/WebServices"
 
 export default {
     name: "graph",
