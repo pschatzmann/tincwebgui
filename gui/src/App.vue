@@ -84,7 +84,7 @@
         data: () => ({
             networks : [],
             network: null,
-            tincIsActive: null
+            tincIsActive: true
         }),
 
         methods: {
@@ -94,45 +94,48 @@
 
             toggleOnOff() {
                 this.tincIsActive = !this.tincIsActive
+                this.doOnOff()
+            },
+
+            doOnOff(){
+                var self = this
                 if (this.tincIsActive){
+                    WebServices.action('start').then( result => {
+                         console.log(result); 
+                        self.tincIsActive = true
+                    }, err => {
+                        self.$store.dispatch('setError', err)
+                        self.tincIsActive = false
+                    })
+                } else {
                     WebServices.action('stop').then( result => {
                         console.log(result); 
                     }, err => {
-                        this.$store.dispatch('setError', err)
-                        this.checkActive()
-                    })
-                } else {
-                    WebServices.action('start').then( result => {
-                         console.log(result); 
-                        this.tincIsActive = true
-                    }, err => {
-                        this.$store.dispatch('setError', err)
-                        this.tincIsActive = false
+                        self.$store.dispatch('setError', err)
+                        self.checkOn()
                     })
                 }
             },
 
-            checkActive() {
+            checkOn() {
+                var self = this
                 WebServices.action('pid').then( result => {
                     console.log('pid',result); 
-                    this.tincIsActive = true
+                    self.tincIsActive = true
                 }, err => {
                     console.log(err); 
-                    this.tincIsActive = false
+                    self.tincIsActive = false
                 })
             },
 
-            onChangeEventHandler(){
-            },
-
             action(action) {
+                var self = this
                 WebServices.action(action).then( result => {
                     console.log(result); 
                 }, err => {
-                    this.$store.dispatch('setError', err)
+                    self.$store.dispatch('setError', err)
                 });
             }
-
         }, 
 
         computed: {
@@ -140,7 +143,6 @@
                 get() {
                     return this.$store.state.navigationDrawer.drawer
                 },
-
                 set(value) {
                     this.$store.dispatch('setNavigationDrawer', value)
                 }
@@ -152,24 +154,7 @@
         },
 
         mounted() {
-            WebServices.getNetworks().then(result => {
-                this.networks = result
-                // select first network
-                if (this.networks.length>=1){
-                    this.network = this.networks[0]
-                    // start tinc
-                    WebServices.action('start').then( result => {
-                         console.log(result); 
-                        this.tincIsActive = true
-                    }, err => {
-                        this.$store.dispatch('setError', err)
-                        this.tincIsActive = false
-                    })
-                }
-            }, err => {
-                this.$store.dispatch('setError', err)
-                this.tincIsActive = false
-            });
+            this.doOnOff()
         }
     }
 

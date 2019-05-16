@@ -94,15 +94,17 @@ export default {
         makeTableHTML(myArray) {
             var result = "<table>";
             for(var i=0; i<myArray.length; i++) {
-                result += "<tr>";
-                for(var j=0; j<myArray[i].length; j++){
-                    if (j==0){
-                        result += "<td align='right'>"+this.firstCharAsCaps(myArray[i][j])+": </td>";
-                    } else {
-                        result += "<td>"+myArray[i][j]+"</td>";
+                if (myArray[i][1]!='0') {
+                    result += "<tr>";
+                    for(var j=0; j<myArray[i].length; j++){
+                        if (j==0){
+                            result += "<td align='right'>"+this.firstCharAsCaps(myArray[i][j])+": </td>";
+                        } else {
+                            result += "<td>"+myArray[i][j]+"</td>";
+                        }
                     }
+                    result += "</tr>";
                 }
-                result += "</tr>";
             }
             result += "</table>";
             return result;
@@ -170,7 +172,7 @@ export default {
         border-radius: 6px;
         cursor: auto;
         font-family: Arial;
-        font-size: 12px;
+        font-size: 8px;
         color: black;
         font-weight: bold;
         padding: 20px 
