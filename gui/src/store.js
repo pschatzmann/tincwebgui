@@ -5,7 +5,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         isProcessing: false,
-        isActive: false,
+        isActive: true,
 
         error: null,
         // navigation

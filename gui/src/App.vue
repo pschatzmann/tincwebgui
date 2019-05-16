@@ -97,6 +97,7 @@
             },
 
             doOnOff(){
+                store.dispatch("setError", null)
                 var self = this
                 if (this.tincIsActive){
                     WebServices.action('start').then( result => {
@@ -110,7 +111,7 @@
                     WebServices.action('stop').then( result => {
                         console.log(result); 
                     }, err => {
-                        self.$store.dispatch('setError', err)
+                        //self.$store.dispatch('setError', err)
                         self.checkOn()
                     })
                 }
