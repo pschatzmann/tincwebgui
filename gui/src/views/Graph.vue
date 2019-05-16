@@ -174,8 +174,9 @@ export default {
         font-family: Arial;
         font-size: 8px;
         color: black;
-        font-weight: bold;
-        padding: 20px 
+        font-weight: normal;
+        padding-left: 20px;
+        padding-right: 20px;
     }
 
 </style>
