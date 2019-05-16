@@ -47,7 +47,11 @@ export default new Vuex.Store({
         },
 
         setError(context, error) {
-            context.commit("SET_ERROR", error)
+            var errorMsg = error
+            if (error.response && error.response.data) {
+                errorMsg = error.response.data
+            }
+            context.commit("SET_ERROR", errorMsg)
         },
 
         setNavigationDrawer(context, visible) {

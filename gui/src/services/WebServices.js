@@ -38,9 +38,7 @@ const WebServices = {
 
     // download blob
     async getDownload(command) {
-        return axios.get(this.url + "/api/"+command, {
-            responseType: 'arraybuffer'
-        })
+        return axios.get(this.url + "/api/"+command)
     },
 
     // create a URL to a Blob for the indicated mime object
@@ -63,12 +61,12 @@ const WebServices = {
 
     // process invite
     async invite(nodeName) {
-        return await axios.post(this.url + '/api/invite', {node: nodeName})
+        return await axios.post(this.url + '/api/invite?node='+nodeName)
     },
 
     // process join-invite
     async joinInvite(invitation) {
-        return await axios.post(this.url + '/api//join',{invitation: invitation })
+        return await axios.post(this.url + '/api//join?invitation='+invitation)
     }
 }
 
