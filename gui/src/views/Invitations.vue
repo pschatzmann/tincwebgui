@@ -6,10 +6,10 @@
     <div>
         <v-toolbar   class="my-toolbar">
             <v-btn v-on:click="invite()" >
-                <v-icon>call_made</v-icon>
+                <v-icon>cload_upload</v-icon>
             </v-btn>   
             <v-btn v-on:click="joinInvite()"  >
-                <v-icon>call_received</v-icon>
+                <v-icon>cload_download</v-icon>
             </v-btn>   
             <v-spacer/>
         </v-toolbar>
