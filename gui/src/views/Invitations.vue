@@ -15,7 +15,6 @@
         </v-toolbar>
         <v-alert :value="error!=null" type="error">{{error}}</v-alert>
         <v-container fluid>
-            <MyInputDialog :inputData="inputDialogData"/>
             <v-card>
                     <v-data-table
                         :headers="headers"
@@ -29,16 +28,21 @@
                         </template>
                     </v-data-table>
             </v-card>
+            <MyInputDialog :inputData="inputDialogData"/>
         </v-container>
+
     </div>
 </template>
 
 <script>
     import WebServices from "@/services/WebServices"
-    import "@/components/MyInputDialog"
+    import MyInputDialog from "@/components/MyInputDialog"
 
     export default {
-        name: "currentConfiguration",
+        name: "Invitations",
+
+        components: { MyInputDialog },
+
         data: () => ({
             headers: [
                 { text: 'Invitation',value: 'Invitation' },
@@ -46,7 +50,12 @@
             ],
             items: [],
             inputDialogData: {
-                visible: false
+                 title: 'Title',
+                 text: 'Text',
+                 inputName: 'inputName', 
+                 inputText: '', 
+                 visible: false, 
+                 processOK: null 
             }
         }),
 
@@ -54,7 +63,10 @@
             invite() {
                 this.$store.dispatch("setError", null)
                 var self = this
-                this.inputDialogData.title = 'Node Name'
+                this.inputDialogData.title = 'Create Invitation'
+                this.inputDialogData.text = 'Enter the Node Name for the Invitation:'
+                this.inputDialogData.inputName = 'Node Name'
+                this.inputDialogData.inputText = ''
                 this.inputDialogData.ok = (nodeName) => {
                     WebServices.invite(nodeName).then( result => {
                         console.log(result); 
@@ -68,7 +80,10 @@
             joinInvite() {
                 this.$store.dispatch("setError", null)
                 var self = this
-                this.inputDialogData.title = 'Node Name'
+                this.inputDialogData.title = 'Join Invitation'
+                this.inputDialogData.text = 'Enter the generated Invitation:'
+                this.inputDialogData.inputName = 'Invitation'
+                this.inputDialogData.inputText = ''
                 this.inputDialogData.ok = (invitation) => {
                     WebServices.join(invitation).then( result => {
                         console.log(result); 

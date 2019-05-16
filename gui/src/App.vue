@@ -20,7 +20,7 @@
                     <v-icon>more_vert</v-icon>
                 </v-btn>
                 <v-list>
-                    <v-list-tile  @click="action('restart')">
+                    <v-list-tile  @click="doRestart()">
                         <v-list-tile-title>Restart</v-list-tile-title>
                         <v-list-tile-action/>
                     </v-list-tile>
@@ -77,6 +77,7 @@
                     }, err => {
                         self.$store.dispatch('setError', err)
                         self.tincIsActive = false
+                        self.tincIsActive = true
                     })
                 } else {
                     WebServices.action('stop').then( result => {
