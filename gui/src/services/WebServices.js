@@ -65,7 +65,7 @@ const WebServices = {
     },
 
     // process join-invite
-    async joinInvite(invitation) {
+    async joinInvitation(invitation) {
         return await axios.post(this.url + '/api//join?invitation='+invitation)
     }
 }

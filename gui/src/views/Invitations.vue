@@ -88,7 +88,7 @@
             joinInvite() {
                 var self = this
                 var ok = (invitation) => {
-                    WebServices.join(invitation).then( result => {
+                    WebServices.joinInvitation(invitation).then( result => {
                         console.log(result); 
                         self.updateInvitations()
                     }, err => {
