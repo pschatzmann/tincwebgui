@@ -97,7 +97,7 @@
             },
 
             doOnOff(){
-                store.dispatch("setError", null)
+                this.store.dispatch("setError", null)
                 var self = this
                 if (this.tincIsActive){
                     WebServices.action('start').then( result => {
