@@ -38,7 +38,7 @@ const WebServices = {
 
     // download blob
     async getDownload(command) {
-        return axios.get(this.url + "/api/"+command)
+        return axios.post(this.url + "/api/"+command)
     },
 
     // create a URL to a Blob for the indicated mime object

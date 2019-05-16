@@ -250,19 +250,19 @@ export default {
     }
 
     #sigmaContainer {
-        height:80vh;
+        height:70vh;
     }
 
     .sigma-tooltip {
         max-width: 240px;
         max-height: 280px;
-        background-color: yellow;
+        background-color: lightyellow;
         border: 1px solid ;
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-        border-radius: 6px;
+        border-radius: 12px;
         cursor: auto;
         font-family: Arial;
-        font-size: 8px;
+        font-size: 9px;
         color: black;
         font-weight: normal;
         padding-left: 20px;
