@@ -41,7 +41,7 @@
 
     methods: {
       ok() {
-          if (this.inputData.processOK) {
+          if (typeof is.inputData.processOK === "function") {
             this.inputData.processOK(this.inputData.inputText)
           }
           this.inputData.visible = false

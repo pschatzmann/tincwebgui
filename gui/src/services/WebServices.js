@@ -31,15 +31,13 @@ const WebServices = {
         return await axios.get(this.url + '/api/'+command)
     },
 
-    // start, stop, restart, purge, generate-keys
-
+    // E.g start, stop, restart, purge, generate-keys
     async action(command) {
         return await axios.post(this.url + '/api/'+command)
     },
 
-
+    // download blob
     async getDownload(command) {
-        await this.defineHeaderAxios()
         return axios.get(this.url + "/api/"+command, {
             responseType: 'arraybuffer'
         })
@@ -56,16 +54,21 @@ const WebServices = {
         }
     },
 
-    async doImport() {
-        return await axios.post(this.url + '/api/import')
+    // import a file
+    async doImport(file) {
+        var formData = new FormData();
+        formData.append('file', file);
+        return await axios.post(this.url + '/api/import', formData, { headers: { 'Content-Type': 'multipart/form-data'}})
     },
 
-    async invite() {
-        return await axios.post(this.url + '/api/invite')
+    // process invite
+    async invite(nodeName) {
+        return await axios.post(this.url + '/api/invite', {node: nodeName})
     },
 
-    async joinInvite() {
-        return await axios.post(this.url + '/api/joinInvite')
+    // process join-invite
+    async joinInvite(invitation) {
+        return await axios.post(this.url + '/api//join',{invitation: invitation })
     }
 }
 

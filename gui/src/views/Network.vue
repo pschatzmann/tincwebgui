@@ -12,7 +12,7 @@
                 <v-icon>cloud_circle</v-icon>
             </v-btn>   
             <v-btn v-on:click="doImport()"  >
-                <v-icon>cload_download</v-icon>
+                <v-icon>cloud_download</v-icon>
             </v-btn>   
             <v-btn v-on:click="action('purge')"  >
                 <v-icon>delete_outline</v-icon>
