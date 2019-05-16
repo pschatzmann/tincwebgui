@@ -3,7 +3,7 @@
  */
  
  <template>
-    <div>
+    <div id="sticky">
         <v-toolbar  class="my-toolbar">
             <v-btn v-on:click="saveAs('export')" >
                 <v-icon>cloud</v-icon>
@@ -213,6 +213,19 @@ export default {
 </script>
 
 <style>
+    #sticky {
+        top: 63px;
+        height: 63px;
+        z-index: 1;
+        position: -webkit-sticky;
+        position: sticky;
+        visibility: visible;
+    }
+
+    .myToolbar > .v-toolbar__content {
+        height: 63px
+    }
+
     #sigmaContainer {
         height:80vh;
     }

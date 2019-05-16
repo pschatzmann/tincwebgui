@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div #sticky>
         <v-toolbar  class="my-toolbar">
             <v-btn  v-on:click="toggleExpanded()">
                 <v-icon dark>{{iconName}}</v-icon>
@@ -79,4 +79,19 @@ export default {
 }
 
 </script>
+
+<style scoped>
+    #sticky {
+        top: 63px;
+        height: 63px;
+        z-index: 1;
+        position: -webkit-sticky;
+        position: sticky;
+        visibility: visible;
+    }
+
+   .myToolbar > .v-toolbar__content {
+        height: 63px;
+    }
+</style>
 

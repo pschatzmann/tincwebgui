@@ -14,6 +14,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// Auth - authentication management information
 type Auth struct {
 	password       string
 	passwordActive bool
