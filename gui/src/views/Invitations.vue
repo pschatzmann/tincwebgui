@@ -5,12 +5,24 @@
 <template>
     <div>
         <v-toolbar   class="my-toolbar">
-            <v-btn v-on:click="invite()" >
-                <v-icon>cloud_upload</v-icon>
-            </v-btn>   
-            <v-btn v-on:click="joinInvite()"  >
-                <v-icon>cloud_download</v-icon>
-            </v-btn>   
+            <v-tooltip bottom>
+                <span>Generate an Invitation for a Node</span>
+                <template v-slot:activator="{ on }">
+                    <v-btn v-on="on" v-on:click="invite()" >
+                        <v-icon>cloud_upload</v-icon>
+                    </v-btn>   
+                </template>
+            </v-tooltip>
+
+            <v-tooltip bottom>
+                <span>Join a VPN using an Invitation</span>
+                <template v-slot:activator="{ on }">
+                    <v-btn v-on="on" v-on:click="joinInvite()" >
+                       <v-icon>cloud_download</v-icon>
+                    </v-btn>   
+                </template>
+            </v-tooltip>
+
             <v-spacer/>
         </v-toolbar>
         <v-alert :value="error!=null" type="error">{{error}}</v-alert>
@@ -88,7 +100,6 @@
 
             showInputDialog(title, text, inputName, ok){
                 this.$store.dispatch("setError", null)
-                var self = this
                 this.inputDialogData.title = title
                 this.inputDialogData.text = text
                 this.inputDialogData.inputName = inputName

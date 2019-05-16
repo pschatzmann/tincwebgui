@@ -5,18 +5,41 @@
  <template>
     <div id="sticky">
         <v-toolbar  class="my-toolbar">
-            <v-btn v-on:click="saveAs('export')" >
-                <v-icon>cloud</v-icon>
-            </v-btn>   
-            <v-btn v-on:click="saveAs('export_all')" >
-                <v-icon>cloud_circle</v-icon>
-            </v-btn>   
-            <v-btn v-on:click="doImport()"  >
-                <v-icon>cloud_download</v-icon>
-            </v-btn>   
-            <v-btn v-on:click="action('purge')"  >
-                <v-icon>delete_outline</v-icon>
-            </v-btn>   
+            <v-tooltip bottom>
+                <span>Export host configuration of local node </span>
+                <template v-slot:activator="{ on }">
+                    <v-btn v-on="on" v-on:click="saveAs('export')" >
+                        <v-icon>cloud</v-icon>
+                    </v-btn>   
+                </template>
+            </v-tooltip>
+
+            <v-tooltip bottom>
+                <span>Export all host configuration files</span>
+                <template v-slot:activator="{ on }">
+                    <v-btn v-on="on" v-on:click="saveAs('export_all')" >
+                        <v-icon>cloud_circle</v-icon>
+                    </v-btn>   
+                </template>
+            </v-tooltip>
+
+            <v-tooltip bottom>
+                <span>Import host configuration file(s)</span>
+                <template v-slot:activator="{ on }">
+                    <v-btn v-on="on" v-on:click="doImport()"  >
+                        <v-icon>cloud_download</v-icon>
+                    </v-btn>   
+                </template>
+            </v-tooltip>
+
+            <v-tooltip bottom>
+                <span>Purge unreachable nodes</span>
+                <template v-slot:activator="{ on }">
+                    <v-btn v-on="on" v-on:click="action('purge')"  >
+                        <v-icon>delete_outline</v-icon>
+                    </v-btn>   
+                </template>
+            </v-tooltip>
             <v-spacer/>
         </v-toolbar>
         <v-alert :value="error!=null" type="error">{{error}}</v-alert>

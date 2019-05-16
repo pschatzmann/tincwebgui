@@ -1,5 +1,5 @@
 <template>
-    <div #sticky>
+    <div id='#sticky' >
         <v-toolbar  class="my-toolbar">
             <v-btn  v-on:click="toggleExpanded()">
                 <v-icon dark>{{iconName}}</v-icon>
