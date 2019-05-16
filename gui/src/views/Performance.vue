@@ -1,5 +1,14 @@
 <template>
     <div>
+        <v-toolbar  class="my-toolbar">
+            <div>
+                <label class="myCheckBoxLabel"> <input type="checkbox" class="myStatus"
+                                                       v-model="documentStatusProcessed">Bytes</label>
+                <label class="myCheckBoxLabel"> <input type="checkbox" class="myStatus"
+                                                       v-model="documentStatusMarked">Packets</label>
+            </div>
+            <v-spacer/>
+        </v-toolbar>
         <v-alert :value="error!=null" type="error">{{error}}</v-alert>
         <v-container id='performanceContainer' fluid>
             <v-card>
@@ -43,4 +52,13 @@ export default {
     #performanceContainer {
         height:80vh;
     }
+
+    .myCheckBoxLabel {
+        padding: 8px;
+    }
+
+    .myCheckBoxLabel > input {
+        margin: 5px;
+    }
+
 </style>

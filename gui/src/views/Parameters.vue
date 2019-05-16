@@ -1,5 +1,11 @@
 <template>
     <div>
+        <v-toolbar  class="my-toolbar">
+            <v-btn  v-on:click="toggleExpanded()">
+                <v-icon dark>{{iconName}}</v-icon>
+            </v-btn>  
+            <v-spacer/>
+        </v-toolbar>
         <v-alert :value="error!=null" type="error">{{error}}</v-alert>
         <v-container fluid>
 
@@ -16,9 +22,6 @@
                         </template>
                     </v-data-table>
             </v-card>
-            <v-btn  v-on:click="toggleExpanded()" fab dark small color="green">
-                <v-icon dark>{{iconName}}</v-icon>
-            </v-btn>  
         </v-container>
     </div>
 </template>

@@ -43,13 +43,13 @@
                 </v-list-tile-content>
             </v-list-tile>
 
-            <!-- Graph for connections -->
-            <v-list-tile v-if="isActive"  to="/graph">
+            <!-- Network -->
+            <v-list-tile v-if="isActive"  to="/network">
                 <v-list-tile-action>
                     <v-icon>network_check</v-icon>
                 </v-list-tile-action>
                 <v-list-tile-content>
-                    <v-list-tile-title>Network Overview</v-list-tile-title>
+                    <v-list-tile-title>Network</v-list-tile-title>
                 </v-list-tile-content>
             </v-list-tile>
 
@@ -59,7 +59,7 @@
                     <v-icon>bar_chart</v-icon>
                 </v-list-tile-action>
                 <v-list-tile-content>
-                    <v-list-tile-title>Performance Charts</v-list-tile-title>
+                    <v-list-tile-title>Performance</v-list-tile-title>
                 </v-list-tile-content>
             </v-list-tile>
             
@@ -69,7 +69,7 @@
                     <v-icon>list</v-icon>
                 </v-list-tile-action>
                 <v-list-tile-content>
-                    <v-list-tile-title>List Invitations</v-list-tile-title>
+                    <v-list-tile-title>Invitations</v-list-tile-title>
                 </v-list-tile-content>
             </v-list-tile>
 

@@ -1,5 +1,20 @@
 <template>
     <div>
+        <v-toolbar  class="my-toolbar">
+            <v-btn v-on:click="saveAs('export')" >
+                <v-icon>call_made</v-icon>
+            </v-btn>   
+            <v-btn v-on:click="saveAs('export_all')" >
+                <v-icon>call_merge</v-icon>
+            </v-btn>   
+            <v-btn v-on:click="doImport()"  >
+                <v-icon>call_received</v-icon>
+            </v-btn>   
+            <v-btn v-on:click="action('purge')"  >
+                <v-icon>delete_outline</v-icon>
+            </v-btn>   
+            <v-spacer/>
+        </v-toolbar>
         <v-alert :value="error!=null" type="error">{{error}}</v-alert>
         <v-container fluid>
             <v-card>
@@ -16,6 +31,7 @@
 import sigma from 'sigma'
 import WebServices from "@/services/WebServices"
 import '@/plugins/sigma.plugins.tooltips.js'
+import '@/components/MyInputDialog'
 
 export default {
     name: "graph",
@@ -64,6 +80,10 @@ export default {
                 hide: 'outEdge',
                 renderer: null
             },  
+        },
+
+        inputDialog: {
+            visible: false
         },
 
         renderer : {
@@ -148,7 +168,19 @@ export default {
 
             s.graph.read(this.graph);
             s.refresh();
-        }
+        },
+
+        // execute post action
+        action(action) {
+            this.store.dispatch("setError", null)
+            var self = this
+            WebServices.action(action).then( result => {
+                console.log(result); 
+            }, err => {
+                self.$store.dispatch('setError', err)
+            });
+        },
+
     },
 
     mounted() {
@@ -166,7 +198,7 @@ export default {
     .sigma-tooltip {
         max-width: 240px;
         max-height: 280px;
-        background-color: #AAAAAA;
+        background-color: yellow;
         border: 1px solid ;
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
         border-radius: 6px;

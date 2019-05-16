@@ -25,38 +25,6 @@
                         <v-list-tile-action/>
                     </v-list-tile>
                     
-                    <v-divider inset></v-divider>
-
-                    <v-list-tile  @click="action('export')">
-                        <v-list-tile-title>Export</v-list-tile-title>
-                        <v-list-tile-action/>
-                    </v-list-tile>
-                    <v-list-tile  @click="action('export-all')()">
-                        <v-list-tile-title>Export All</v-list-tile-title>
-                        <v-list-tile-action/>
-                    </v-list-tile>
-                    <v-list-tile  @click="doImport()">
-                        <v-list-tile-title>Import</v-list-tile-title>
-                        <v-list-tile-action/>
-                    </v-list-tile>
-
-                    <v-divider inset></v-divider>
-
-                    <v-list-tile  @click="invite()">
-                        <v-list-tile-title>Invite</v-list-tile-title>
-                        <v-list-tile-action/>
-                    </v-list-tile>
-                    <v-list-tile  @click="joinInvite()">
-                        <v-list-tile-title>Join Invitation</v-list-tile-title>
-                        <v-list-tile-action/>
-                    </v-list-tile>
-                    
-                    <v-divider inset></v-divider>
-                    <v-list-tile  @click="action('purge')">
-                        <v-list-tile-title>Purge unreachable Nodes</v-list-tile-title>
-                        <v-list-tile-action/>
-                    </v-list-tile>
-
                     <v-list-tile  @click="action('generate-keys')">
                         <v-list-tile-title>(Re)generate Keys</v-list-tile-title>
                         <v-list-tile-action/>
@@ -87,17 +55,20 @@
         }),
 
         methods: {
+            // show / hide drawer
             toggleDrawer() {
                 this.drawer = !this.drawer
             },
 
+            // activate / deactivate tinc
             toggleOnOff() {
                 this.tincIsActive = !this.tincIsActive
                 this.doOnOff()
             },
 
+            // update the status in tinc with tincIsActive
             doOnOff(){
-                this.store.dispatch("setError", null)
+                this.$store.dispatch("setError", null)
                 var self = this
                 if (this.tincIsActive){
                     WebServices.action('start').then( result => {
@@ -111,12 +82,26 @@
                     WebServices.action('stop').then( result => {
                         console.log(result); 
                     }, err => {
+                        console.log(err)
                         //self.$store.dispatch('setError', err)
                         self.checkOn()
                     })
                 }
             },
 
+            // restart tinc and then check if it is on
+            doRestart() {
+                this.$store.dispatch("setError", null)
+                var self = this
+                WebServices.action("restart").then( result => {
+                    console.log(result); 
+                    self.checkOn();
+                }, err => {
+                    self.$store.dispatch('setError', err)
+                });
+            },
+
+            // check if tinc is active and update tincIsActive
             checkOn() {
                 var self = this
                 WebServices.get('pid').then( result => {
@@ -129,14 +114,17 @@
                 })
             },
 
+            // execute post action
             action(action) {
+                this.$store.dispatch("setError", null)
                 var self = this
                 WebServices.action(action).then( result => {
                     console.log(result); 
                 }, err => {
                     self.$store.dispatch('setError', err)
                 });
-            }
+            },
+
         }, 
 
         computed: {

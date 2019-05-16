@@ -37,9 +37,9 @@ export default new Router({
       component: () => import('./views/Performance.vue')
     },
     {
-      path: '/graph',
-      name: 'graph',
-      component: () => import('./views/Graph.vue')
+      path: '/network',
+      name: 'network',
+      component: () => import('./views/Network.vue')
     },
 
     {
