@@ -181,6 +181,25 @@ export default {
             });
         },
 
+        // export and display sava as dialog
+        saveAs(action){
+            this.store.dispatch("setError", null)
+            var self = this
+            WebServices.getDownloadLink(action).then(url => {
+                var link = document.getElementById("documentContent")
+                if (link == null) {
+                    link = document.createElement('a');
+                    link.setAttribute("id", "documentContent");
+                }
+                link.setAttribute('Download', action+'.txt' );
+                link.href = url;
+                document.body.appendChild(link);
+                link.click();
+             }).catch((error) => {
+                self.$store.dispatch('setError', error)
+            })
+        }
+
     },
 
     mounted() {

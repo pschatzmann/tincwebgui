@@ -61,38 +61,49 @@
 
         methods: {
             invite() {
-                this.$store.dispatch("setError", null)
                 var self = this
-                this.inputDialogData.title = 'Create Invitation'
-                this.inputDialogData.text = 'Enter the Node Name for the Invitation:'
-                this.inputDialogData.inputName = 'Node Name'
-                this.inputDialogData.inputText = ''
-                this.inputDialogData.ok = (nodeName) => {
+                var ok = (nodeName) => {
                     WebServices.invite(nodeName).then( result => {
                         console.log(result); 
+                        self.updateInvitations()
                     }, err => {
                         self.$store.dispatch('setError', err)
                     });
                 }
-                this.inputDialogData.visible = true
+                this.showInputDialog('Create Invitation','Enter the Node Name for the Invitation:','Node Name', ok )
             }, 
 
             joinInvite() {
-                this.$store.dispatch("setError", null)
                 var self = this
-                this.inputDialogData.title = 'Join Invitation'
-                this.inputDialogData.text = 'Enter the generated Invitation:'
-                this.inputDialogData.inputName = 'Invitation'
-                this.inputDialogData.inputText = ''
-                this.inputDialogData.ok = (invitation) => {
+                var ok = (invitation) => {
                     WebServices.join(invitation).then( result => {
                         console.log(result); 
+                        self.updateInvitations()
                     }, err => {
                         self.$store.dispatch('setError', err)
                     });
                 }
-                this.inputDialogData.visible = true
+                this.showInputDialog('Join Invitation','Enter the generated Invitation:','Invitation', ok )
             }
+        },
+
+        showInputDialog(title, text, inputName, ok){
+            this.$store.dispatch("setError", null)
+            var self = this
+            this.inputDialogData.title = title
+            this.inputDialogData.text = text
+            this.inputDialogData.inputName = inputName
+            this.inputDialogData.inputText = ''
+            this.inputDialogData.processOK = ok
+            this.inputDialogData.visible = true
+        },
+
+        updateInvitations() {
+            WebServices.getInvitations().then(result => {
+                this.items = result.data
+            },error => {
+                this.$store.dispatch('setError', error)
+            })
         },
 
         computed: {
@@ -102,11 +113,7 @@
         },
 
         mounted() {
-            WebServices.getInvitations().then(result => {
-                this.items = result.data
-            },error => {
-                this.$store.dispatch('setError', error)
-            })
+            this.updateInvitations()
         }
     }
 </script>

@@ -37,12 +37,23 @@ const WebServices = {
         return await axios.post(this.url + '/api/'+command)
     },
 
-    async export() {
-        return await axios.post(this.url + '/api/export')
+
+    async getDownload(command) {
+        await this.defineHeaderAxios()
+        return axios.get(this.url + "/api/"+command, {
+            responseType: 'arraybuffer'
+        })
     },
 
-    async exportAll() {
-        return await axios.post(this.url + '/api/exportAll')
+    // create a URL to a Blob for the indicated mime object
+    async getDownloadLink(command) {
+        var response = await this.getDownload(command)
+        if (response.request.status == 200) {
+            const url = URL.createObjectURL(new Blob([response.data], {type: 'text/plain'}));
+            return await url
+        } else {
+            throw new Error("DOWNLOAD-ERROR")
+        }
     },
 
     async doImport() {

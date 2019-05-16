@@ -77,7 +77,7 @@
                     }, err => {
                         self.$store.dispatch('setError', err)
                         self.tincIsActive = false
-                        self.tincIsActive = true
+                        // test: self.tincIsActive = true
                     })
                 } else {
                     WebServices.action('stop').then( result => {
