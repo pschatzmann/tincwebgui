@@ -27,6 +27,9 @@ const WebServices = {
         return await axios.get(this.url + '/api/nodes')
     },
 
+    async get(command) {
+        return await axios.get(this.url + '/api/'+command)
+    },
 
     // start, stop, restart, purge, generate-keys
 

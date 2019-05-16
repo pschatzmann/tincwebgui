@@ -12,12 +12,13 @@ new Vue({
   render: h => h(App)
 }).$mount('#app')
 
-// Check authorizaitons for each router step
+// Reset errors on each navigation change
 router.beforeEach((to, from, next) => {
   console.log("Navigating to ", to.fullPath)
 
   // clear errors when we change the screen
   store.dispatch("setError", null)
   store.dispatch("setProcessing", false)
+  next();
 
 })

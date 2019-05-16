@@ -118,9 +118,10 @@
 
             checkOn() {
                 var self = this
-                WebServices.action('pid').then( result => {
+                WebServices.get('pid').then( result => {
                     console.log('pid',result); 
-                    self.tincIsActive = true
+                    var isnum = /^\d+$/.test(result.data);
+                    self.tincIsActive = isnum
                 }, err => {
                     console.log(err); 
                     self.tincIsActive = false
