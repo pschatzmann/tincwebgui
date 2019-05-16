@@ -5,6 +5,7 @@ package service
 *  execute them.
 **/
 import (
+	"encoding/json"
 	"errors"
 	"log"
 	"net/http"
@@ -106,13 +107,13 @@ func (cmd *Command) commandHandler(w http.ResponseWriter, r *http.Request) {
 func (cmd *Command) getCommands(r *http.Request) ([]string, error) {
 	commands := cmd.commands[:]
 	if cmd.parameterName != "" {
-		var parNameValue = r.URL.Query().Get(cmd.parameterName)
+		var parNameValue = getHTTPParameterValue(r, cmd.parameterName)
 		if parNameValue == "" {
 			return commands, errors.New("The parameter is mandatory: " + cmd.parameterName)
 		}
 		commands = append(commands, parNameValue)
 		if cmd.valueName != "" {
-			parValueValue := r.URL.Query().Get(cmd.valueName)
+			parValueValue := getHTTPParameterValue(r, cmd.valueName)
 			if parValueValue == "" {
 				return commands, errors.New("The value is mandatory: " + cmd.valueName)
 			}
@@ -120,6 +121,42 @@ func (cmd *Command) getCommands(r *http.Request) ([]string, error) {
 		}
 	}
 	return commands, nil
+}
+
+// determine the parmameter value from the url, the form or from json
+func getHTTPParameterValue(r *http.Request, name string) string {
+	result := getQueryParam(r, name)
+	if result == "" {
+		result = getFormParam(r, name)
+	}
+	if result == "" {
+		result = getJSONParam(r, name)
+	}
+	return result
+}
+
+func getQueryParam(r *http.Request, name string) string {
+	parNameValue := r.URL.Query().Get(name)
+	return parNameValue
+}
+
+func getFormParam(r *http.Request, name string) string {
+	err := r.ParseForm()
+	if err != nil {
+		return ""
+	}
+	parNameValue := r.Form.Get(name)
+	return parNameValue
+}
+
+func getJSONParam(r *http.Request, name string) string {
+	decoder := json.NewDecoder(r.Body)
+	mapFromJSON := make(map[string]string)
+	err := decoder.Decode(&mapFromJSON)
+	if err != nil {
+		return ""
+	}
+	return mapFromJSON[name]
 }
 
 func getErrorText(t1 string, t2 string) string {
