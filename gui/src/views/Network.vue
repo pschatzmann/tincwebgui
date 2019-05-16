@@ -17,7 +17,7 @@
             <v-tooltip bottom>
                 <span>Export all host configuration files</span>
                 <template v-slot:activator="{ on }">
-                    <v-btn v-on="on" v-on:click="saveAs('export_all')" >
+                    <v-btn v-on="on" v-on:click="saveAs('export-all')" >
                         <v-icon>cloud_circle</v-icon>
                     </v-btn>   
                 </template>
@@ -35,7 +35,7 @@
             <v-tooltip bottom>
                 <span>Purge unreachable nodes</span>
                 <template v-slot:activator="{ on }">
-                    <v-btn v-on="on" v-on:click="action('purge')"  >
+                    <v-btn v-on="on" v-on:click="purge()"  >
                         <v-icon>delete_outline</v-icon>
                     </v-btn>   
                 </template>
@@ -225,7 +225,30 @@ export default {
              }).catch((error) => {
                 self.$store.dispatch('setError', error)
             })
+        },
+
+        // import a selected file
+        doImport() {
+            var input = document.createElement('input');
+            input.type = 'file';
+            input.onchange = e => { 
+                var file = e.target.files[0]; 
+                WebServices.import(file).then(result => {
+                    console.log(result)
+                }).catch((error) => {
+                    self.$store.dispatch('setError', error)
+                })           
+            }
+            input.click();
+        },
+
+        // purge unreachable nodes
+        purge() {
+            action('purge')
+            // reload data
+            setup()
         }
+
     },
 
     mounted() {
