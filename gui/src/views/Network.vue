@@ -1,14 +1,18 @@
-<template>
+/**
+ * Display and manage Network Information
+ */
+ 
+ <template>
     <div>
         <v-toolbar  class="my-toolbar">
             <v-btn v-on:click="saveAs('export')" >
-                <v-icon>call_made</v-icon>
+                <v-icon>cloud</v-icon>
             </v-btn>   
             <v-btn v-on:click="saveAs('export_all')" >
-                <v-icon>call_merge</v-icon>
+                <v-icon>cloud_circle</v-icon>
             </v-btn>   
             <v-btn v-on:click="doImport()"  >
-                <v-icon>call_received</v-icon>
+                <v-icon>cload_download</v-icon>
             </v-btn>   
             <v-btn v-on:click="action('purge')"  >
                 <v-icon>delete_outline</v-icon>
@@ -172,7 +176,7 @@ export default {
 
         // execute post action
         action(action) {
-            this.store.dispatch("setError", null)
+            this.$store.dispatch("setError", null)
             var self = this
             WebServices.action(action).then( result => {
                 console.log(result); 
@@ -181,9 +185,9 @@ export default {
             });
         },
 
-        // export and display sava as dialog
+        // export and display save as dialog
         saveAs(action){
-            this.store.dispatch("setError", null)
+            this.$store.dispatch("setError", null)
             var self = this
             WebServices.getDownloadLink(action).then(url => {
                 var link = document.getElementById("documentContent")
@@ -199,7 +203,6 @@ export default {
                 self.$store.dispatch('setError', error)
             })
         }
-
     },
 
     mounted() {

@@ -1,15 +1,15 @@
-/
-  Loads all tinc conmfiguration parameters from the webservice and displays them in a table
+/**
+ *  Manage Invitations
 **/
 
 <template>
     <div>
         <v-toolbar   class="my-toolbar">
             <v-btn v-on:click="invite()" >
-                <v-icon>cload_upload</v-icon>
+                <v-icon>cloud_upload</v-icon>
             </v-btn>   
             <v-btn v-on:click="joinInvite()"  >
-                <v-icon>cload_download</v-icon>
+                <v-icon>cloud_download</v-icon>
             </v-btn>   
             <v-spacer/>
         </v-toolbar>
@@ -84,26 +84,26 @@
                     });
                 }
                 this.showInputDialog('Join Invitation','Enter the generated Invitation:','Invitation', ok )
-            }
-        },
+            },
 
-        showInputDialog(title, text, inputName, ok){
-            this.$store.dispatch("setError", null)
-            var self = this
-            this.inputDialogData.title = title
-            this.inputDialogData.text = text
-            this.inputDialogData.inputName = inputName
-            this.inputDialogData.inputText = ''
-            this.inputDialogData.processOK = ok
-            this.inputDialogData.visible = true
-        },
+            showInputDialog(title, text, inputName, ok){
+                this.$store.dispatch("setError", null)
+                var self = this
+                this.inputDialogData.title = title
+                this.inputDialogData.text = text
+                this.inputDialogData.inputName = inputName
+                this.inputDialogData.inputText = ''
+                this.inputDialogData.processOK = ok
+                this.inputDialogData.visible = true
+            },
 
-        updateInvitations() {
-            WebServices.getInvitations().then(result => {
-                this.items = result.data
-            },error => {
-                this.$store.dispatch('setError', error)
-            })
+            updateInvitations() {
+                WebServices.getInvitations().then(result => {
+                    this.items = result.data
+                },error => {
+                    this.$store.dispatch('setError', error)
+                })
+            },
         },
 
         computed: {

@@ -1,3 +1,6 @@
+/**
+ * Display the PDF Manual
+ */
 <template>
     <div>
         <my-document-toolbar  :endOfPage="pageCount==currentPage" v-on:next="next()" v-on:back="back()"
