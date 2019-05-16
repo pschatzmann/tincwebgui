@@ -5,6 +5,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         isProcessing: false,
+        isActive: false,
 
         error: null,
         // navigation
@@ -29,12 +30,20 @@ export default new Vuex.Store({
 
         SET_NAVIGATION_DAWER_PERMANENT(state, permanent) {
             state.navigationDrawer.permanent = permanent
+        },
+
+        SET_ACTIVE(state, active) {
+            state.isActive = active
         }
     },
     
     actions: {
         setProcessing(context, status) {
             context.commit("SET_PROCESSING", status)
+        },
+
+        setActive(context, status) {
+            context.commit("SET_ACTIVE", status)
         },
 
         setError(context, error) {

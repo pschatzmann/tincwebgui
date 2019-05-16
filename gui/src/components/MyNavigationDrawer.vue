@@ -34,7 +34,7 @@
             </v-list-tile>
 
             <!-- Properties -->
-            <v-list-tile to="/parameters">
+            <v-list-tile v-if="isActive" to="/parameters">
                 <v-list-tile-action>
                     <v-icon>settings</v-icon>
                 </v-list-tile-action>
@@ -44,7 +44,7 @@
             </v-list-tile>
 
             <!-- Graph for connections -->
-            <v-list-tile to="/graph">
+            <v-list-tile v-if="isActive"  to="/graph">
                 <v-list-tile-action>
                     <v-icon>network_check</v-icon>
                 </v-list-tile-action>
@@ -54,7 +54,7 @@
             </v-list-tile>
 
             <!-- Ping -->
-            <v-list-tile to="/performance">
+            <v-list-tile v-if="isActive"  to="/performance">
                 <v-list-tile-action>
                     <v-icon>bar_chart</v-icon>
                 </v-list-tile-action>
@@ -64,7 +64,7 @@
             </v-list-tile>
             
             <!-- Invitations -->
-            <v-list-tile to="/invitations">
+            <v-list-tile v-if="isActive" to="/invitations">
                 <v-list-tile-action>
                     <v-icon>list</v-icon>
                 </v-list-tile-action>
@@ -117,6 +117,9 @@
                     this.$store.dispatch('setNavigationDrawer', value)
                 }
             },
+            isActive() {
+                return this.$store.state.isActive
+            }
         },
 
         methods: {

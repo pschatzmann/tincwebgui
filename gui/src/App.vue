@@ -84,7 +84,6 @@
         data: () => ({
             networks : [],
             network: null,
-            tincIsActive: true
         }),
 
         methods: {
@@ -148,9 +147,19 @@
                 }
             },
 
+            tincIsActive:{
+                get() {
+                    return this.$store.state.isActive
+                },
+                set(value) {
+                    this.$store.dispatch('setActive', value)
+                }  
+            },
+
             onOffInfo() {
                 return this.tincIsActive ?  {color:"green", icon:"toggle_on"} : {color:"red", icon:"toggle_off"}
             }
+
         },
 
         mounted() {
