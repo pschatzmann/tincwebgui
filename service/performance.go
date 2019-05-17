@@ -148,7 +148,7 @@ func GetNetworkTraffic() map[string][]MeasurementsPerSecondType {
 }
 
 // GetNetworkTrafficInJSON - Provides the recorded network statistics as JSON
-func GetNetworkTrafficInJSON(asBytes bool, rx bool) []byte {
+func GetNetworkTrafficInJSON(asBytes bool) []byte {
 	buf := &bytes.Buffer{}
 
 	fmt.Fprintf(buf, "{ \"%v\": ", "rx")
@@ -197,11 +197,10 @@ func writeData(buf *bytes.Buffer, asBytes bool, rx bool) {
 
 // NetworkTrafficHandler - Provides the recorded network statistics as JSON to http
 func NetworkTrafficHandler(w http.ResponseWriter, r *http.Request) {
-	rx := getHTTPParameterValue(r, "rx") == "rx"
 	bytes := getHTTPParameterValue(r, "bytes") == "bytes"
-	log.Println("NetworkTrafficHandler:", rx, bytes)
+	log.Println("NetworkTrafficHandler:", bytes)
 	w.Header().Set("Content-Type", "application/json")
-	w.Write(GetNetworkTrafficInJSON(bytes, rx))
+	w.Write(GetNetworkTrafficInJSON(bytes))
 }
 
 // NetworkTrafficStartHandler - start recording
