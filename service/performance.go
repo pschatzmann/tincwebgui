@@ -43,12 +43,9 @@ type resultPerSecond struct {
 // record of last measuremnets for each node
 var lastMeasurements = make(map[string]*measurementsRecordType)
 
-// chanel for timer
-var quit = make(chan int)
-var STOP = 0
-
-// timer for the recoring of data
+// timer
 var ticker *time.Ticker
+var active = true
 
 // measurement database
 var measurementResult = make(map[string][]MeasurementsPerSecondType)
@@ -112,6 +109,7 @@ func addResultValues(name string, measurement *measurementsRecordType) {
 
 // StartNetworkTraffic - starts to record the network tx and rx
 func StartNetworkTraffic() {
+	active = true
 	if ticker == nil {
 		ticker = time.NewTicker(5 * time.Second)
 		go func() {
@@ -119,7 +117,9 @@ func StartNetworkTraffic() {
 				select {
 				case <-ticker.C:
 					measure()
-				case <-quit:
+				}
+				// stop processing
+				if !active {
 					log.Println("Stopping Recording...")
 					if ticker != nil {
 						ticker.Stop()
@@ -138,7 +138,7 @@ func StartNetworkTraffic() {
 
 // StopNetworkTraffic - stops the network tx and rx recording
 func StopNetworkTraffic() {
-	quit <- STOP
+	active = false
 }
 
 // GetNetworkTraffic - Privdes the recorded network statistics
@@ -148,8 +148,7 @@ func GetNetworkTraffic() map[string][]MeasurementsPerSecondType {
 
 // GetNetworkTrafficInJSON - Provides the recorded network statistics as JSON
 func GetNetworkTrafficInJSON() []byte {
-	result := GetNetworkTraffic()
-	resultJSON, err := json.Marshal(result)
+	resultJSON, err := json.Marshal(measurementResult)
 	if err != nil {
 		return nil
 	}
