@@ -1,11 +1,13 @@
 <template>
     <div>
         <v-toolbar  class="my-toolbar">
+            <v-switch class="my-switch" v-model="activeValue" :label="activeLabel"></v-switch>
+
             <div>
                 <label class="myCheckBoxLabel"> <input type="radio" value="Bytes" class="myStatus"
-                                                       v-model="asBytes" v-on:change="updateData()"  >Bytes</label>
+                                                       v-model="asBytes" v-on:change="updateData()">Bytes</label>
                 <label class="myCheckBoxLabel"> <input type="radio" value="Packets" class="myStatus"
-                                                       v-model="asBytes" v-on:change="updateData()" >Packets</label>
+                                                       v-model="asBytes" v-on:change="updateData()">Packets</label>
             </div>
             <v-spacer/>
         </v-toolbar>
@@ -36,7 +38,8 @@ export default {
         timer: null,
         asBytes: 'Bytes',
         chartData : {rx:[], tx: []},
-        unit: ""
+        unit: "",
+        activeValue: false,
 
        // [ 
        //     {name: 'node1', data: {'2017-01-01 00:00:00 -0800': 3, '2017-01-02 00:00:00 -0800': 4}},
@@ -48,6 +51,32 @@ export default {
     computed: {
         error() {
             return this.$store.state.error
+        },
+
+        activeLabel() {
+            return this.active ? 'On' : 'Off'
+        },
+
+        active: {
+            set(value){
+                const self = this
+                if (value){
+                    WebServices.networkTrafficOn().then(result => {
+                        self.activeValue = value
+                    },error => {
+                        self.$store.dispatch('setError', error)
+                    })
+                } else {
+                    WebServices.networkTrafficOff().then(result => {
+                        self.activeValue = value
+                    },error => {
+                        self.$store.dispatch('setError', error)
+                    })
+                }
+            },
+            get() {
+                return this.activeValue
+            }
         }
     }, 
 
@@ -86,6 +115,11 @@ export default {
 
     .myCheckBoxLabel > input {
         margin: 5px;
+    }
+
+    .my-switch {
+        max-width: 100px;
+        max-height: 30px;
     }
 
 </style>
