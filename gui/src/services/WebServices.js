@@ -74,11 +74,11 @@ const WebServices = {
         return await axios.get(this.url + '/api/network-traffic?bytes='+asBytes)
     },
 
-    async getNetworkTrafficOn() {
+    async networkTrafficOn() {
         return await axios.post(this.url + '/api/network-traffic')
     },
 
-    async getNetworkTrafficOff() {
+    async networkTrafficOff() {
         return await axios.delete(this.url + '/api/network-traffic')
     }
 
