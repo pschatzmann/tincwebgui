@@ -42,7 +42,6 @@
             </v-card>
             <MyInputDialog :inputData="inputDialogData"/>
         </v-container>
-
     </div>
 </template>
 

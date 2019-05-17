@@ -71,7 +71,7 @@ const WebServices = {
 
     // get performance info
     async getNetworkTraffic(asBytes) {
-        return await axios.post(this.url + '/api/join?network-traffic?bytes='+asBytes)
+        return await axios.get(this.url + '/api/network-traffic?bytes='+asBytes)
     }
 
 }

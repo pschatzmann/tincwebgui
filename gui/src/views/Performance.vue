@@ -35,7 +35,7 @@ export default {
     data: () => ({
         timer: null,
         asBytes: 'Bytes',
-        chartData : null,
+        chartData : {rx:[], tx: []},
         unit: null
 
        // [ 
