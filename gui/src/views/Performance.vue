@@ -3,9 +3,9 @@
         <v-toolbar  class="my-toolbar">
             <div>
                 <label class="myCheckBoxLabel"> <input type="radio" value="Bytes" class="myStatus"
-                                                       v-model="asBytes">Bytes</label>
+                                                       v-model="asBytes" v-on:change="updateData()"  >Bytes</label>
                 <label class="myCheckBoxLabel"> <input type="radio" value="Packets" class="myStatus"
-                                                       v-model="asBytes">Packets</label>
+                                                       v-model="asBytes" v-on:change="updateData()" >Packets</label>
             </div>
             <v-spacer/>
         </v-toolbar>
