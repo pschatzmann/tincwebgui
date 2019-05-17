@@ -44,7 +44,8 @@ type resultPerSecond struct {
 var lastMeasurements = make(map[string]*measurementsRecordType)
 
 // chanel for timer
-var quit = make(chan struct{})
+var quit = make(chan int)
+var STOP = 0
 
 // timer for the recoring of data
 var ticker *time.Ticker
@@ -138,7 +139,7 @@ func StartNetworkTraffic() {
 
 // StopNetworkTraffic - stops the network tx and rx recording
 func StopNetworkTraffic() {
-	close(quit)
+	quit <- STOP
 }
 
 // GetNetworkTraffic - Privdes the recorded network statistics
