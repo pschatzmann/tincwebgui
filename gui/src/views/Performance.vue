@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-toolbar  class="my-toolbar">
-            <v-switch class="my-switch" v-model="activeValue" :label="activeLabel"></v-switch>
+            <v-switch class="my-switch" v-model="active" :label="activeLabel"></v-switch>
 
             <div>
                 <label class="myCheckBoxLabel"> <input type="radio" value="Bytes" class="myStatus"
@@ -39,7 +39,6 @@ export default {
         asBytes: 'Bytes',
         chartData : {rx:[], tx: []},
         unit: "",
-        activeValue: false,
 
        // [ 
        //     {name: 'node1', data: {'2017-01-01 00:00:00 -0800': 3, '2017-01-02 00:00:00 -0800': 4}},
@@ -62,20 +61,20 @@ export default {
                 const self = this
                 if (value){
                     WebServices.networkTrafficOn().then(result => {
-                        self.activeValue = value
+                        this.$store.dispatch("setNetworkTrafficActive", value)
                     },error => {
                         self.$store.dispatch('setError', error)
                     })
                 } else {
                     WebServices.networkTrafficOff().then(result => {
-                        self.activeValue = value
+                        this.$store.dispatch("setNetworkTrafficActive", value)
                     },error => {
                         self.$store.dispatch('setError', error)
                     })
                 }
             },
             get() {
-                return this.activeValue
+                return this.$store.state.isNetworkTrafficActive
             }
         }
     }, 
