@@ -13,10 +13,10 @@
         <v-container id='performanceContainer' fluid>
             <v-card>
                 <v-container fluid>
-                    <area-chart :stacked="true" :refresh="5" :data="data" legend="right"  title="Traffic In (bytes)"/>
+                    <area-chart :stacked="true" :refresh="5" :data="dataCalculated" legend="right"  title="Traffic In (bytes)"/>
                 </v-container>
                 <v-container fluid>
-                    <area-chart :stacked="true" :refresh="5" :data="data" legend="right" title="Traffic Out (bytes)"/>
+                    <area-chart :stacked="true" :refresh="5" :data="dataCalculated" legend="right" title="Traffic Out (bytes)"/>
                 </v-container>
             </v-card>
         </v-container>
@@ -24,6 +24,7 @@
 </template>
 
 <script>
+import WebServices from "@/services/WebServices"
 import Vue from 'vue'
 import VueChartkick from 'vue-chartkick'
 import Chart from 'chart.js'
@@ -32,10 +33,11 @@ Vue.use(VueChartkick, {adapter: Chart})
 export default {
     name: "performance",
     data: () => ({
-        data : [
-            {name: 'node1', data: {'2017-01-01 00:00:00 -0800': 3, '2017-01-02 00:00:00 -0800': 4}},
-            {name: 'node2', data: {'2017-01-01 00:00:00 -0800': 5, '2017-01-02 00:00:00 -0800': 3}}
-        ]
+        actualData : []
+       // [ 
+       //     {name: 'node1', data: {'2017-01-01 00:00:00 -0800': 3, '2017-01-02 00:00:00 -0800': 4}},
+       //     {name: 'node2', data: {'2017-01-01 00:00:00 -0800': 5, '2017-01-02 00:00:00 -0800': 3}}
+       // ]
 
     }),
     
@@ -43,7 +45,23 @@ export default {
         error() {
             return this.$store.state.error
         },
-    },
+
+        dataCalculated() {
+            this.updateData()
+            return this.actualData
+        }
+    }, 
+
+    methods: {
+        updateData() {
+            // trigger reloading of data which will be diplayed with next call
+            WebServices.getNetworkTraffic().then(result => {
+                this.actualData = result.data
+            },error => {
+                this.$store.dispatch('setError', error)
+            })
+        }
+    }
 }
 
 </script>

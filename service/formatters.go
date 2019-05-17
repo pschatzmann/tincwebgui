@@ -80,9 +80,10 @@ func InvitationsFormatter(out []byte) ([]byte, Mime, error) {
 	return []byte(result), "application/json", nil
 }
 
+var nodeFields = []string{"name", "id", "at", "port", "cipher", "digest", "maclength", "compression", "options", "status", "nexthop", "distance", "pmtu", "rx", "tx"}
+
 // NodesFormatter - converts the info result into an json object
 // docker id 1d6c0791469a at unknown port unknown cipher 0 digest 0 maclength 0 compression 0 options 0 status 0800 nexthop - via - distance 0 pmtu 9018 (min 0 max 9018) rx 0 0 tx 0 0
-var nodeFields = []string{"name", "id", "at", "port", "cipher", "digest", "maclength", "compression", "options", "status", "nexthop", "distance", "pmtu", "rx", "tx"}
 func NodesFormatter(out []byte) ([]byte, Mime, error) {
 	return parsingFormatter(nodeFields, out)
 }

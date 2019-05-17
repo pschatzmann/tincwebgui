@@ -244,9 +244,9 @@ export default {
 
         // purge unreachable nodes
         purge() {
-            action('purge')
+            this.action('purge')
             // reload data
-            setup()
+            this.setup()
         }
 
     },

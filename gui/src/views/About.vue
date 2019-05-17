@@ -44,3 +44,11 @@ export default {
     }
 }
 </script>
+
+<style>
+  h1, h2, h3 {
+      padding-top: 5px;
+      padding-bottom: 5px
+  }
+
+</style>

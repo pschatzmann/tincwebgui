@@ -422,6 +422,19 @@ paths:
       summary: Network Usage Statistics
       tags:
         - CustomGUI
+      parameters:
+        - in: query
+          name: bytes
+          schema:
+            type: boolean
+          required: true
+          description: Provide the information in Bytes (instead of Packets)
+        - in: query
+          name: rx
+          schema:
+            type: boolean
+          required: true
+          description: Provide RX information (instaead of PX)
       responses:
         200:
           description: OK

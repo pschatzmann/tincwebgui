@@ -5,7 +5,8 @@ package service
  **/
 
 import (
-	"encoding/json"
+	"bytes"
+	"fmt"
 	"log"
 	"net/http"
 	"os/exec"
@@ -30,7 +31,6 @@ type measurementXStruct struct {
 // MeasurementsPerSecondType - Indivudual Record for the Recoding Result per node
 type MeasurementsPerSecondType struct {
 	Timestamp time.Time
-	Seconds   float64
 	Bytes     resultPerSecond
 	Packets   resultPerSecond
 }
@@ -95,7 +95,6 @@ func addResultValues(name string, measurement *measurementsRecordType) {
 		// calculate rates
 		rec := MeasurementsPerSecondType{}
 		rec.Timestamp = measurement.timestamp
-		rec.Seconds = duration.Seconds()
 		rec.Bytes.Rx = float64(measurement.rx.bytes-priorMeasurement.rx.bytes) / duration.Seconds()
 		rec.Packets.Rx = float64(measurement.rx.packets-priorMeasurement.rx.packets) / duration.Seconds()
 		rec.Bytes.Tx = float64(measurement.tx.bytes-priorMeasurement.tx.bytes) / duration.Seconds()
@@ -116,15 +115,15 @@ func StartNetworkTraffic() {
 			for {
 				select {
 				case <-ticker.C:
-					measure()
+					if active {
+						measure()
+					}
 				}
 				// stop processing
 				if !active {
 					log.Println("Stopping Recording...")
 					if ticker != nil {
 						ticker.Stop()
-						lastMeasurements = make(map[string]*measurementsRecordType)
-						measurementResult = make(map[string][]MeasurementsPerSecondType)
 					}
 					ticker = nil
 					return
@@ -139,6 +138,8 @@ func StartNetworkTraffic() {
 // StopNetworkTraffic - stops the network tx and rx recording
 func StopNetworkTraffic() {
 	active = false
+	lastMeasurements = make(map[string]*measurementsRecordType)
+	measurementResult = make(map[string][]MeasurementsPerSecondType)
 }
 
 // GetNetworkTraffic - Privdes the recorded network statistics
@@ -147,20 +148,51 @@ func GetNetworkTraffic() map[string][]MeasurementsPerSecondType {
 }
 
 // GetNetworkTrafficInJSON - Provides the recorded network statistics as JSON
-func GetNetworkTrafficInJSON() []byte {
-	resultJSON, err := json.Marshal(measurementResult)
-	if err != nil {
-		return nil
+func GetNetworkTrafficInJSON(asBytes bool, rx bool) []byte {
+	buf := &bytes.Buffer{}
+
+	buf.Write([]byte{'{', '\n'})
+	first := true
+	for key, values := range measurementResult {
+		if !first {
+			buf.WriteByte(',')
+		}
+		buf.Write([]byte("{ name:'" + key + "', data: {"))
+		for i, value := range values {
+			if i > 0 {
+				buf.WriteByte(',')
+			}
+			resultValue := 0.0
+			if asBytes {
+				if rx {
+					resultValue = value.Bytes.Rx
+				} else {
+					resultValue = value.Bytes.Tx
+				}
+			} else {
+				if rx {
+					resultValue = value.Packets.Rx
+				} else {
+					resultValue = value.Packets.Tx
+				}
+			}
+			fmt.Fprintf(buf, "'%v' : %v", value.Timestamp, resultValue)
+			first = false
+		}
+		buf.Write([]byte{'}', '\n'})
 	}
-	// return result as json array
-	return resultJSON
+	buf.Write([]byte{'}', '\n'})
+
+	return buf.Bytes()
 }
 
 // NetworkTrafficHandler - Provides the recorded network statistics as JSON to http
 func NetworkTrafficHandler(w http.ResponseWriter, r *http.Request) {
-	log.Println("NetworkTrafficHandler")
+	rx := getHTTPParameterValue(r, "rx") == "rx"
+	bytes := getHTTPParameterValue(r, "bytes") == "bytes"
+	log.Println("NetworkTrafficHandler:", rx, bytes)
 	w.Header().Set("Content-Type", "application/json")
-	w.Write(GetNetworkTrafficInJSON())
+	w.Write(GetNetworkTrafficInJSON(bytes, rx))
 }
 
 // NetworkTrafficStartHandler - start recording

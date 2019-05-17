@@ -12,7 +12,7 @@ func TestMeasure(t *testing.T) {
 	time.Sleep(12 * time.Second)
 
 	speed := GetNetworkTraffic()
-	log.Println(GetNetworkTrafficInJSON())
+	log.Println(GetNetworkTrafficInJSON(true, true))
 
 	if len(speed) == 0 {
 		t.Errorf("The network statistics are empty")
@@ -25,6 +25,4 @@ func TestMeasure(t *testing.T) {
 	}
 
 	StopNetworkTraffic()
-
-	log.Println(GetNetworkTrafficInJSON())
 }
