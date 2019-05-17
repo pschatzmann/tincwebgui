@@ -151,9 +151,9 @@ func GetNetworkTraffic() map[string][]MeasurementsPerSecondType {
 func GetNetworkTrafficInJSON(asBytes bool, rx bool) []byte {
 	buf := &bytes.Buffer{}
 
-	fmt.Fprintf(buf, "{ %v: ", "rx")
+	fmt.Fprintf(buf, "{ \"%v\": ", "rx")
 	writeData(buf, asBytes, true)
-	fmt.Fprintf(buf, ", %v: ", "tx")
+	fmt.Fprintf(buf, ", \"%v\": ", "tx")
 	writeData(buf, asBytes, false)
 	buf.Write([]byte{'\n', '}'})
 
@@ -167,7 +167,7 @@ func writeData(buf *bytes.Buffer, asBytes bool, rx bool) {
 		if !first {
 			buf.Write([]byte{',', '\n'})
 		}
-		buf.Write([]byte("{ name: '" + key + "', 'data': {"))
+		buf.Write([]byte("{ \"name\": \"" + key + "\", \"data\": {"))
 
 		for i, value := range values {
 			if i > 0 {
@@ -187,7 +187,7 @@ func writeData(buf *bytes.Buffer, asBytes bool, rx bool) {
 					resultValue = value.Packets.Tx
 				}
 			}
-			fmt.Fprintf(buf, "'%v' : %v", value.Timestamp.Format(time.RFC3339), resultValue)
+			fmt.Fprintf(buf, "\"%v\": %v", value.Timestamp.Format(time.RFC3339), resultValue)
 			first = false
 		}
 		buf.Write([]byte{'}', '}'})
