@@ -11,7 +11,6 @@ import (
 func RegisterAPIServices(path string, r *mux.Router) {
 	api := r.PathPrefix(path).Subrouter()
 
-	api.HandleFunc("/ping", Ping).Methods("GET")
 	api.HandleFunc("/import", ImportHandler).Methods("POST")
 
 	// simple commands
@@ -43,7 +42,7 @@ func RegisterAPIServices(path string, r *mux.Router) {
 	api.HandleFunc("/graph", NewCommand2(DottyFormatter, "dump", "graph").Handler()).Methods("GET")
 	api.HandleFunc("/digraph", NewCommand2(DottyFormatter, "dump", "digraph").Handler()).Methods("GET")
 
-	api.HandleFunc("/info", NewCommand3(InfoFormatter, "name", "node").Handler()).Methods("GET")
+	api.HandleFunc("/info", NewCommand3(InfoFormatter, "name", "info").Handler()).Methods("GET")
 
 	// commands with 1 parameter
 	api.HandleFunc("/verify", NewCommand3(CommandFormatter, "node", "verify").Handler()).Methods("GET")
@@ -59,6 +58,10 @@ func RegisterAPIServices(path string, r *mux.Router) {
 	api.HandleFunc("/parameter", NewCommand4(CommandFormatter, "name", "value", "add").Handler()).Methods("POST")
 	api.HandleFunc("/parameter", NewCommand4(CommandFormatter, "name", "value", "set").Handler()).Methods("PUT")
 
+	// custom commands
+	api.HandleFunc("/ping", Ping).Methods("GET")
+	api.HandleFunc("/network-traffic", NetworkTrafficHandler).Methods("GET")
+	api.HandleFunc("/network-traffic", NetworkTrafficStartHandler).Methods("POST")
+	api.HandleFunc("/network-traffic", NetworkTrafficStopHandler).Methods("DELETE")
 
 }
-

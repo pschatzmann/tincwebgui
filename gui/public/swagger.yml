@@ -9,14 +9,6 @@ servers:
   - url: "/api"
 
 paths:
-  /ping:
-    get:
-      summary: Connection test
-      tags:
-        - Information
-      responses:
-        200:
-          description: OK
 
   /fsck:
     get:
@@ -413,4 +405,37 @@ paths:
           description: Value of Parameter
       responses:
         '200':    # status code
+          description: OK
+
+
+  /ping:
+    get:
+      summary: Connection test
+      tags:
+        - CustomGUI
+      responses:
+        200:
+          description: OK
+
+  /network-traffic:
+    get:
+      summary: Network Usage Statistics
+      tags:
+        - CustomGUI
+      responses:
+        200:
+          description: OK
+    post:
+      summary: Start the recording of Network Usage Statistics
+      tags:
+        - CustomGUI
+      responses:
+        200:
+          description: OK
+    delete:
+      summary: Stop the recording of Network Usage Statistics
+      tags:
+        - CustomGUI
+      responses:
+        200:
           description: OK
