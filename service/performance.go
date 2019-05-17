@@ -114,9 +114,6 @@ func addResultValues(name string, measurement *measurementsRecordType) {
 func StartNetworkTraffic() {
 	if ticker == nil {
 		ticker = time.NewTicker(5 * time.Second)
-		// we restart with clean data
-		lastMeasurements = make(map[string]*measurementsRecordType)
-		measurementResult = make(map[string][]MeasurementsPerSecondType)
 		go func() {
 			for {
 				select {
@@ -126,6 +123,8 @@ func StartNetworkTraffic() {
 					log.Println("Stopping Recording...")
 					if ticker != nil {
 						ticker.Stop()
+						lastMeasurements = make(map[string]*measurementsRecordType)
+						measurementResult = make(map[string][]MeasurementsPerSecondType)
 					}
 					ticker = nil
 					return
