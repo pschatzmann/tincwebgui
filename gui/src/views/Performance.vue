@@ -33,7 +33,7 @@ Vue.use(VueChartkick, {adapter: Chart})
 export default {
     name: "performance",
     data: () => ({
-        asBytes: true,
+        asBytes: 'Bytes',
         actualTX : [],
         actualRX : [],
        // [ 
@@ -62,7 +62,7 @@ export default {
     methods: {
         updateRXData() {
             // trigger reloading of data which will be diplayed with next call
-            WebServices.getNetworkTraffic(asBytes,true).then(result => {
+            WebServices.getNetworkTraffic(this.asBytes == 'Bytes',true).then(result => {
                 this.actualRX = result.data
             },error => {
                 this.$store.dispatch('setError', error)
@@ -71,7 +71,7 @@ export default {
 
         updateTXData() {
             // trigger reloading of data which will be diplayed with next call
-            WebServices.getNetworkTraffic(asBytes,false).then(result => {
+            WebServices.getNetworkTraffic(asBytes == 'Bytes',false).then(result => {
                 this.actualTX = result.data
             },error => {
                 this.$store.dispatch('setError', error)
