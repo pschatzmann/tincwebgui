@@ -13,10 +13,10 @@
         <v-container id='performanceContainer' fluid>
             <v-card>
                 <v-container fluid>
-                    <area-chart :stacked="true" :refresh="5" :data="dataRX" legend="right"  title="Traffic In (bytes)"/>
+                    <area-chart :stacked="true" :data="chartData.rx" legend="right"  title="Traffic In (bytes)"/>
                 </v-container>
                 <v-container fluid>
-                    <area-chart :stacked="true" :refresh="5" :data="dataTX" legend="right" title="Traffic Out (bytes)"/>
+                    <area-chart :stacked="true" :data="chartData.tx" legend="right" title="Traffic Out (bytes)"/>
                 </v-container>
             </v-card>
         </v-container>
@@ -33,9 +33,10 @@ Vue.use(VueChartkick, {adapter: Chart})
 export default {
     name: "performance",
     data: () => ({
+        timer: null,
         asBytes: 'Bytes',
-        actualTX : [],
-        actualRX : [],
+        chartData : null,
+
        // [ 
        //     {name: 'node1', data: {'2017-01-01 00:00:00 -0800': 3, '2017-01-02 00:00:00 -0800': 4}},
        //     {name: 'node2', data: {'2017-01-01 00:00:00 -0800': 5, '2017-01-02 00:00:00 -0800': 3}}
@@ -46,15 +47,6 @@ export default {
     computed: {
         error() {
             return this.$store.state.error
-        },
-
-        dataRX() {
-            this.updateData()
-            return this.actualRX
-        },
-
-        dataTX() {
-            return this.actualTX
         }
     }, 
 
@@ -62,12 +54,20 @@ export default {
         updateData() {
             // trigger reloading of data which will be diplayed with next call
             WebServices.getNetworkTraffic(this.asBytes == 'Bytes').then(result => {
-                this.actualRX = result.data.rx
-                this.actualTX = result.data.tx
+                this.chartData = result.data
             },error => {
                 this.$store.dispatch('setError', error)
             })
         },
+    },
+
+    created() {
+        this.updateData();
+        this.timer = setInterval(this.updateData(), 10000)
+    },
+
+    beforeDestroy() {
+        clearInterval(this.timer)
     }
 }
 
