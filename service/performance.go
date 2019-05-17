@@ -122,6 +122,7 @@ func StartNetworkTraffic() {
 				case <-ticker.C:
 					measure()
 				case <-quit:
+					log.Println("Stopping Recording...")
 					if ticker != nil {
 						ticker.Stop()
 					}
