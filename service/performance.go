@@ -151,7 +151,7 @@ func GetNetworkTraffic() map[string][]MeasurementsPerSecondType {
 func GetNetworkTrafficInJSON(asBytes bool, rx bool) []byte {
 	buf := &bytes.Buffer{}
 
-	buf.Write([]byte{'{', '\n'})
+	buf.Write([]byte{'[', '\n'})
 	first := true
 	for key, values := range measurementResult {
 		if !first {
@@ -176,12 +176,12 @@ func GetNetworkTrafficInJSON(asBytes bool, rx bool) []byte {
 					resultValue = value.Packets.Tx
 				}
 			}
-			fmt.Fprintf(buf, "'%v' : %v", value.Timestamp.Format("2017-01-01 00:00:00"), resultValue)
+			fmt.Fprintf(buf, "'%v' : %v", value.Timestamp.Format(time.RFC3339), resultValue)
 			first = false
 		}
 		buf.Write([]byte{'}', '}'})
 	}
-	buf.Write([]byte{'}', '\n'})
+	buf.WriteByte(']')
 
 	return buf.Bytes()
 }
