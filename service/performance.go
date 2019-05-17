@@ -31,13 +31,13 @@ type measurementXStruct struct {
 type MeasurementsPerSecondType struct {
 	Timestamp time.Time
 	Seconds   float64
-	Tx        resultPerSecond
-	Rx        resultPerSecond
+	Bytes     resultPerSecond
+	Packets   resultPerSecond
 }
 
 type resultPerSecond struct {
-	Bytes   float64
-	Packets float64
+	Rx float64
+	Tx float64
 }
 
 // record of last measuremnets for each node
@@ -54,8 +54,10 @@ var measurementResult = make(map[string][]MeasurementsPerSecondType)
 
 // collect data at point of time
 func measure() {
+	log.Println("measure")
 	out, err := exec.Command("tinc", "dump", "nodes").CombinedOutput()
 	if err != nil {
+		log.Println("measure with error", err)
 		return
 	}
 	timestamp := time.Now()
@@ -96,10 +98,10 @@ func addResultValues(name string, measurement *measurementsRecordType) {
 		rec := MeasurementsPerSecondType{}
 		rec.Timestamp = measurement.timestamp
 		rec.Seconds = duration.Seconds()
-		rec.Rx.Bytes = float64(measurement.rx.bytes-priorMeasurement.rx.bytes) / duration.Seconds()
-		rec.Rx.Packets = float64(measurement.rx.packets-priorMeasurement.rx.packets) / duration.Seconds()
-		rec.Tx.Bytes = float64(measurement.tx.bytes-priorMeasurement.tx.bytes) / duration.Seconds()
-		rec.Tx.Packets = float64(measurement.tx.packets-priorMeasurement.tx.packets) / duration.Seconds()
+		rec.Bytes.Rx = float64(measurement.rx.bytes-priorMeasurement.rx.bytes) / duration.Seconds()
+		rec.Packets.Rx = float64(measurement.rx.packets-priorMeasurement.rx.packets) / duration.Seconds()
+		rec.Bytes.Tx = float64(measurement.tx.bytes-priorMeasurement.tx.bytes) / duration.Seconds()
+		rec.Packets.Tx = float64(measurement.tx.packets-priorMeasurement.tx.packets) / duration.Seconds()
 		// append record
 		measurementResult[name] = append(measurementResult[name], rec)
 	}
@@ -111,16 +113,18 @@ func addResultValues(name string, measurement *measurementsRecordType) {
 func StartNetworkTraffic() {
 	if ticker == nil {
 		ticker = time.NewTicker(5 * time.Second)
+		// we restart with clean data
+		lastMeasurements = make(map[string]*measurementsRecordType)
+		measurementResult = make(map[string][]MeasurementsPerSecondType)
 		go func() {
 			for {
 				select {
 				case <-ticker.C:
 					measure()
 				case <-quit:
-					ticker.Stop()
-					// clear the data
-					lastMeasurements = make(map[string]*measurementsRecordType)
-					measurementResult = make(map[string][]MeasurementsPerSecondType)
+					if ticker != nil {
+						ticker.Stop()
+					}
 					ticker = nil
 					return
 				}
@@ -154,12 +158,14 @@ func GetNetworkTrafficInJSON() []byte {
 
 // NetworkTrafficHandler - Provides the recorded network statistics as JSON to http
 func NetworkTrafficHandler(w http.ResponseWriter, r *http.Request) {
+	log.Println("NetworkTrafficHandler")
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(GetNetworkTrafficInJSON())
 }
 
 // NetworkTrafficStartHandler - start recording
 func NetworkTrafficStartHandler(w http.ResponseWriter, r *http.Request) {
+	log.Println("NetworkTrafficStartHandler")
 	StartNetworkTraffic()
 	w.Header().Set("Content-Type", "text/plain")
 	w.Write([]byte("OK"))
@@ -167,6 +173,7 @@ func NetworkTrafficStartHandler(w http.ResponseWriter, r *http.Request) {
 
 // NetworkTrafficStopHandler - stops recording
 func NetworkTrafficStopHandler(w http.ResponseWriter, r *http.Request) {
+	log.Println("NetworkTrafficStopHandler")
 	StopNetworkTraffic()
 	w.Header().Set("Content-Type", "text/plain")
 	w.Write([]byte("OK"))
