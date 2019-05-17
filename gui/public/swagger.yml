@@ -434,7 +434,7 @@ paths:
           schema:
             type: boolean
           required: true
-          description: Provide RX information (instaead of PX)
+          description: Provide RX information (instaead of TX)
       responses:
         200:
           description: OK

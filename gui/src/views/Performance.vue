@@ -2,10 +2,10 @@
     <div>
         <v-toolbar  class="my-toolbar">
             <div>
-                <label class="myCheckBoxLabel"> <input type="checkbox" class="myStatus"
-                                                       v-model="documentStatusProcessed">Bytes</label>
-                <label class="myCheckBoxLabel"> <input type="checkbox" class="myStatus"
-                                                       v-model="documentStatusMarked">Packets</label>
+                <label class="myCheckBoxLabel"> <input type="radio" class="myStatus"
+                                                       v-model="asBytes">Bytes</label>
+                <label class="myCheckBoxLabel"> <input type="radio" class="myStatus"
+                                                       v-model="asBytes">Packets</label>
             </div>
             <v-spacer/>
         </v-toolbar>
@@ -13,10 +13,10 @@
         <v-container id='performanceContainer' fluid>
             <v-card>
                 <v-container fluid>
-                    <area-chart :stacked="true" :refresh="5" :data="dataCalculated" legend="right"  title="Traffic In (bytes)"/>
+                    <area-chart :stacked="true" :refresh="5" :data="dataRX" legend="right"  title="Traffic In (bytes)"/>
                 </v-container>
                 <v-container fluid>
-                    <area-chart :stacked="true" :refresh="5" :data="dataCalculated" legend="right" title="Traffic Out (bytes)"/>
+                    <area-chart :stacked="true" :refresh="5" :data="dataTX" legend="right" title="Traffic Out (bytes)"/>
                 </v-container>
             </v-card>
         </v-container>
@@ -33,7 +33,9 @@ Vue.use(VueChartkick, {adapter: Chart})
 export default {
     name: "performance",
     data: () => ({
-        actualData : []
+        asBytes: true,
+        actualTX : [],
+        actualRX : [],
        // [ 
        //     {name: 'node1', data: {'2017-01-01 00:00:00 -0800': 3, '2017-01-02 00:00:00 -0800': 4}},
        //     {name: 'node2', data: {'2017-01-01 00:00:00 -0800': 5, '2017-01-02 00:00:00 -0800': 3}}
@@ -46,17 +48,31 @@ export default {
             return this.$store.state.error
         },
 
-        dataCalculated() {
-            this.updateData()
-            return this.actualData
+        dataRX() {
+            this.updateRXData()
+            return this.actualRX
+        },
+
+        dataTX() {
+            this.updateTXData()
+            return this.actualTX
         }
     }, 
 
     methods: {
-        updateData() {
+        updateRXData() {
             // trigger reloading of data which will be diplayed with next call
-            WebServices.getNetworkTraffic().then(result => {
-                this.actualData = result.data
+            WebServices.getNetworkTraffic(asBytes,true).then(result => {
+                this.actualRX = result.data
+            },error => {
+                this.$store.dispatch('setError', error)
+            })
+        },
+
+        updateTXData() {
+            // trigger reloading of data which will be diplayed with next call
+            WebServices.getNetworkTraffic(asBytes,false).then(result => {
+                this.actualTX = result.data
             },error => {
                 this.$store.dispatch('setError', error)
             })
