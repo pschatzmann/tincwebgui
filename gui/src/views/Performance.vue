@@ -49,34 +49,25 @@ export default {
         },
 
         dataRX() {
-            this.updateRXData()
+            this.updateData()
             return this.actualRX
         },
 
         dataTX() {
-            this.updateTXData()
             return this.actualTX
         }
     }, 
 
     methods: {
-        updateRXData() {
+        updateData() {
             // trigger reloading of data which will be diplayed with next call
-            WebServices.getNetworkTraffic(this.asBytes == 'Bytes',true).then(result => {
-                this.actualRX = result.data
+            WebServices.getNetworkTraffic(this.asBytes == 'Bytes').then(result => {
+                this.actualRX = result.data.rx
+                this.actualTX = result.data.tx
             },error => {
                 this.$store.dispatch('setError', error)
             })
         },
-
-        updateTXData() {
-            // trigger reloading of data which will be diplayed with next call
-            WebServices.getNetworkTraffic(asBytes == 'Bytes',false).then(result => {
-                this.actualTX = result.data
-            },error => {
-                this.$store.dispatch('setError', error)
-            })
-        }
     }
 }
 

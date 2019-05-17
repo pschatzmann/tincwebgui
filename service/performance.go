@@ -151,13 +151,24 @@ func GetNetworkTraffic() map[string][]MeasurementsPerSecondType {
 func GetNetworkTrafficInJSON(asBytes bool, rx bool) []byte {
 	buf := &bytes.Buffer{}
 
+	fmt.Fprintf(buf, "{ %v: ", "rx")
+	writeData(buf, asBytes, true)
+	fmt.Fprintf(buf, ", %v: ", "tx")
+	writeData(buf, asBytes, false)
+	buf.Write([]byte{'\n', '}'})
+
+	return buf.Bytes()
+}
+
+func writeData(buf *bytes.Buffer, asBytes bool, rx bool) {
 	buf.Write([]byte{'[', '\n'})
 	first := true
 	for key, values := range measurementResult {
 		if !first {
 			buf.Write([]byte{',', '\n'})
 		}
-		buf.Write([]byte("{ name:'" + key + "', data: {"))
+		buf.Write([]byte("{ name: '" + key + "', 'data': {"))
+
 		for i, value := range values {
 			if i > 0 {
 				buf.WriteByte(',')
@@ -181,9 +192,7 @@ func GetNetworkTrafficInJSON(asBytes bool, rx bool) []byte {
 		}
 		buf.Write([]byte{'}', '}'})
 	}
-	buf.WriteByte(']')
-
-	return buf.Bytes()
+	buf.Write([]byte{'\n', ']'})
 }
 
 // NetworkTrafficHandler - Provides the recorded network statistics as JSON to http

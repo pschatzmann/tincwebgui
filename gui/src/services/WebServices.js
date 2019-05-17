@@ -66,8 +66,14 @@ const WebServices = {
 
     // process join-invite
     async joinInvitation(invitation) {
-        return await axios.post(this.url + '/api//join?invitation='+invitation)
+        return await axios.post(this.url + '/api/join?invitation='+invitation)
+    },
+
+    // get performance info
+    async getNetworkTraffic(asBytes) {
+        return await axios.post(this.url + '/api/join?network-traffic?bytes='+asBytes)
     }
+
 }
 
 export default WebServices
