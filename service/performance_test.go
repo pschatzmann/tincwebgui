@@ -10,11 +10,18 @@ import (
 func TestMeasure(t *testing.T) {
 	StartNetworkTraffic()
 	time.Sleep(12 * time.Second)
-	StopNetworkTraffic()
+
 	speed := GetNetworkTraffic()
+	log.Println(GetNetworkTrafficInJSON())
 
 	if len(speed) == 0 {
 		t.Errorf("The network statistics are empty")
+	}
+
+	for key, value := range speed {
+		if len(value) == 0 {
+			t.Errorf("The network statistics are empty for " + key)
+		}
 	}
 
 	StopNetworkTraffic()

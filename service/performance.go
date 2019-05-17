@@ -41,7 +41,7 @@ type resultPerSecond struct {
 }
 
 // record of last measuremnets for each node
-var lastMeasurements = make(map[string]measurementsRecordType)
+var lastMeasurements = make(map[string]*measurementsRecordType)
 
 // chanel for timer
 var quit = make(chan struct{})
@@ -73,7 +73,7 @@ func measure() {
 		newRec.tx.packets = txPackets
 
 		// extend result database
-		addResultValues(name, newRec)
+		addResultValues(name, &newRec)
 	}
 	return
 }
@@ -88,19 +88,21 @@ func parseX(line string) (int64, int64) {
 	return 0, 0
 }
 
-func addResultValues(name string, measurement measurementsRecordType) {
-	// calculate rates
+func addResultValues(name string, measurement *measurementsRecordType) {
 	priorMeasurement := lastMeasurements[name]
-	rec := MeasurementsPerSecondType{}
-	rec.timestamp = measurement.timestamp
-	duration := measurement.timestamp.Sub(priorMeasurement.timestamp)
-	rec.seconds = duration.Seconds()
-	rec.rx.bytes = float64(measurement.rx.bytes-priorMeasurement.rx.bytes) / duration.Seconds()
-	rec.rx.packets = float64(measurement.rx.packets-priorMeasurement.rx.packets) / duration.Seconds()
-	rec.tx.bytes = float64(measurement.tx.bytes-priorMeasurement.tx.bytes) / duration.Seconds()
-	rec.tx.packets = float64(measurement.tx.packets-priorMeasurement.tx.packets) / duration.Seconds()
-	// append record
-	measurementResult[name] = append(measurementResult[name], rec)
+	if priorMeasurement != nil {
+		duration := measurement.timestamp.Sub(priorMeasurement.timestamp)
+		// calculate rates
+		rec := MeasurementsPerSecondType{}
+		rec.timestamp = measurement.timestamp
+		rec.seconds = duration.Seconds()
+		rec.rx.bytes = float64(measurement.rx.bytes-priorMeasurement.rx.bytes) / duration.Seconds()
+		rec.rx.packets = float64(measurement.rx.packets-priorMeasurement.rx.packets) / duration.Seconds()
+		rec.tx.bytes = float64(measurement.tx.bytes-priorMeasurement.tx.bytes) / duration.Seconds()
+		rec.tx.packets = float64(measurement.tx.packets-priorMeasurement.tx.packets) / duration.Seconds()
+		// append record
+		measurementResult[name] = append(measurementResult[name], rec)
+	}
 	// update last record so that we calculate the rates
 	lastMeasurements[name] = measurement
 }
@@ -116,6 +118,10 @@ func StartNetworkTraffic() {
 					measure()
 				case <-quit:
 					ticker.Stop()
+					// clear the data
+					lastMeasurements = nil
+					measurementResult = make(map[string][]MeasurementsPerSecondType)
+					ticker = nil
 					return
 				}
 			}
@@ -162,6 +168,7 @@ func NetworkTrafficStartHandler(w http.ResponseWriter, r *http.Request) {
 // NetworkTrafficStopHandler - stops recording
 func NetworkTrafficStopHandler(w http.ResponseWriter, r *http.Request) {
 	StopNetworkTraffic()
+
 	w.Header().Set("Content-Type", "text/plain")
 	w.Write([]byte("OK"))
 }
