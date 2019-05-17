@@ -29,15 +29,15 @@ type measurementXStruct struct {
 
 // MeasurementsPerSecondType - Indivudual Record for the Recoding Result per node
 type MeasurementsPerSecondType struct {
-	timestamp time.Time
-	seconds   float64
-	tx        resultPerSecond
-	rx        resultPerSecond
+	Timestamp time.Time
+	Seconds   float64
+	Tx        resultPerSecond
+	Rx        resultPerSecond
 }
 
 type resultPerSecond struct {
-	bytes   float64
-	packets float64
+	Bytes   float64
+	Packets float64
 }
 
 // record of last measuremnets for each node
@@ -94,12 +94,12 @@ func addResultValues(name string, measurement *measurementsRecordType) {
 		duration := measurement.timestamp.Sub(priorMeasurement.timestamp)
 		// calculate rates
 		rec := MeasurementsPerSecondType{}
-		rec.timestamp = measurement.timestamp
-		rec.seconds = duration.Seconds()
-		rec.rx.bytes = float64(measurement.rx.bytes-priorMeasurement.rx.bytes) / duration.Seconds()
-		rec.rx.packets = float64(measurement.rx.packets-priorMeasurement.rx.packets) / duration.Seconds()
-		rec.tx.bytes = float64(measurement.tx.bytes-priorMeasurement.tx.bytes) / duration.Seconds()
-		rec.tx.packets = float64(measurement.tx.packets-priorMeasurement.tx.packets) / duration.Seconds()
+		rec.Timestamp = measurement.timestamp
+		rec.Seconds = duration.Seconds()
+		rec.Rx.Bytes = float64(measurement.rx.bytes-priorMeasurement.rx.bytes) / duration.Seconds()
+		rec.Rx.Packets = float64(measurement.rx.packets-priorMeasurement.rx.packets) / duration.Seconds()
+		rec.Tx.Bytes = float64(measurement.tx.bytes-priorMeasurement.tx.bytes) / duration.Seconds()
+		rec.Tx.Packets = float64(measurement.tx.packets-priorMeasurement.tx.packets) / duration.Seconds()
 		// append record
 		measurementResult[name] = append(measurementResult[name], rec)
 	}
@@ -119,7 +119,7 @@ func StartNetworkTraffic() {
 				case <-quit:
 					ticker.Stop()
 					// clear the data
-					lastMeasurements = nil
+					lastMeasurements = make(map[string]*measurementsRecordType)
 					measurementResult = make(map[string][]MeasurementsPerSecondType)
 					ticker = nil
 					return
@@ -168,7 +168,6 @@ func NetworkTrafficStartHandler(w http.ResponseWriter, r *http.Request) {
 // NetworkTrafficStopHandler - stops recording
 func NetworkTrafficStopHandler(w http.ResponseWriter, r *http.Request) {
 	StopNetworkTraffic()
-
 	w.Header().Set("Content-Type", "text/plain")
 	w.Write([]byte("OK"))
 }
