@@ -22,7 +22,9 @@ func Parse(fields []string, input string) []map[string]string {
 	resultArray := make([]map[string]string, 0)
 	for _, line := range array {
 		resultMap := parseLine(line, fields)
-		resultArray = append(resultArray, resultMap)
+		if len(resultMap) > 0 {
+			resultArray = append(resultArray, resultMap)
+		}
 	}
 	return resultArray
 }
