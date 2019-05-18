@@ -66,12 +66,14 @@ export default {
                 const self = this
                 if (value){
                     WebServices.networkTrafficOn().then(result => {
+                        console.log(result)
                         this.activeData = value
                     },error => {
                         self.$store.dispatch('setError', error)
                     })
                 } else {
                     WebServices.networkTrafficOff().then(result => {
+                        console.log(result)
                         this.activeData = value
                     },error => {
                         self.$store.dispatch('setError', error)

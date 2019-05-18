@@ -154,6 +154,11 @@
 
         },
 
+        created: function() {
+            // setup service URL
+            WebServices.url = window.location.origin
+        },
+
         mounted() {
             this.doOnOff()
         }

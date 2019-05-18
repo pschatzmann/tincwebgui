@@ -2,13 +2,18 @@ import axios from 'axios'
 /**
  * Access Tinc functionality via Webservices
  */
+
 const WebServices = {
+
     get url() {
-        var result = process.env.ServiceURL;
-        if (!result) {
-             result = "http://localhost:8000"
+        if (!this._url){
+            this._url = "http://localhost:8000"
         }
-        return result
+        return this._url
+    },
+
+    set url(url){
+        this._url = url
     },
 
     async getNetworks() {
