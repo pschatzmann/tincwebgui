@@ -1,6 +1,6 @@
-/**
- * Display and manage Network Information
- */
+/<!--
+  Display and manage Network Information
+ -->
  
  <template>
     <div id="sticky">

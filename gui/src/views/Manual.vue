@@ -1,6 +1,7 @@
-/**
- * Display the PDF Manual
- */
+<!--
+  Display the tinc PDF Manual
+ -->
+
 <template>
     <div>
         <my-document-toolbar  :endOfPage="pageCount==currentPage" v-on:next="next()" v-on:back="back()"

@@ -1,6 +1,6 @@
-/**
- *  Manage Invitations
-**/
+<!--
+   Manage Invitations
+-->
 
 <template>
     <div>

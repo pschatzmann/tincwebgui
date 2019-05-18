@@ -1,7 +1,5 @@
 <!--
----
---- View: About - Provide Application Help. The content is loaded from Wordpress
----
+ View: About - Provide Application Help. The content is loaded from Wordpress
 -->
 
 <template>

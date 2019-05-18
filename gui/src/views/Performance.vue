@@ -1,3 +1,7 @@
+<!--
+  Display Chart with download and upload statistics
+-->
+
 <template>
     <div>
         <v-toolbar  class="my-toolbar">
