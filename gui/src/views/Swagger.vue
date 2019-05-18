@@ -19,7 +19,6 @@ export default {
             url: '/swagger.yml',
             deepLinking: false,
         })
-
     }
 }
 </script>

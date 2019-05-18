@@ -32,6 +32,11 @@ const WebServices = {
         return await axios.get(this.url + '/api/nodes')
     },
 
+    async getEdges() {
+        return await axios.get(this.url + '/api/edges')
+    },
+
+
     async get(command) {
         return await axios.get(this.url + '/api/'+command)
     },
