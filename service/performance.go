@@ -227,7 +227,7 @@ type status struct {
 
 // NetworkTrafficStatusHandler - Provides the information if the network traffic recording is active
 func NetworkTrafficStatusHandler(w http.ResponseWriter, r *http.Request) {
-	log.Println("NetworkTrafficStatusHandler -> " + string(status))
+	log.Println("NetworkTrafficStatusHandler -> " + strconv.FormatBool(active))
 	status := status{active}
 	result, err := json.Marshal(status)
 	if err != nil {
