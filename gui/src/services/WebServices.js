@@ -74,6 +74,10 @@ const WebServices = {
         return await axios.get(this.url + '/api/network-traffic?bytes='+asBytes)
     },
 
+    async getNetworkTrafficStatus() {
+        return await axios.get(this.url + '/api/network-traffic-recording')
+    },
+
     async networkTrafficOn() {
         return await axios.post(this.url + '/api/network-traffic-recording')
     },
@@ -82,9 +86,6 @@ const WebServices = {
         return await axios.delete(this.url + '/api/network-traffic-recording')
     },
 
-    async networkTrafficStatus() {
-        return await axios.get(this.url + '/api/network-traffic-recording')
-    }
 
 }
 

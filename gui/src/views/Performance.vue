@@ -96,7 +96,7 @@ export default {
         },
         // update status with ws
         updateStatus() {
-            WebServices.getNetworkTrafficStatus(this.asBytes == 'Bytes').then(result => {
+            WebServices.getNetworkTrafficStatus().then(result => {
                 this.activeData = result.data.Status
             },error => {
                 console.log(error)
