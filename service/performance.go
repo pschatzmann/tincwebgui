@@ -46,7 +46,7 @@ var lastMeasurements = make(map[string]*measurementsRecordType)
 
 // timer
 var ticker *time.Ticker
-var active = true
+var active = false
 
 // measurement database
 var measurementResult = make(map[string][]MeasurementsPerSecondType)
@@ -198,7 +198,7 @@ func writeData(buf *bytes.Buffer, asBytes bool, rx bool) {
 
 // NetworkTrafficHandler - Provides the recorded network statistics as JSON to http
 func NetworkTrafficHandler(w http.ResponseWriter, r *http.Request) {
-	bytes := getHTTPParameterValue(r, "bytes") == "bytes"
+	bytes := getHTTPParameterValue(r, "bytes") == "true"
 	log.Println("NetworkTrafficHandler:", bytes)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(GetNetworkTrafficInJSON(bytes))
@@ -227,7 +227,7 @@ type status struct {
 
 // NetworkTrafficStatusHandler - Provides the information if the network traffic recording is active
 func NetworkTrafficStatusHandler(w http.ResponseWriter, r *http.Request) {
-	log.Println("NetworkTrafficStatusHandler")
+	log.Println("NetworkTrafficStatusHandler -> " + string(status))
 	status := status{active}
 	result, err := json.Marshal(status)
 	if err != nil {
