@@ -13,6 +13,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"json"
 )
 
 // record for last measurement
@@ -218,3 +219,22 @@ func NetworkTrafficStopHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain")
 	w.Write([]byte("OK"))
 }
+
+
+// values for last measurement
+type status struct {
+	Status   bool
+}
+// NetworkTrafficStatusHandler - Provides the information if the network traffic recording is active
+func NetworkTrafficStatusHandler(w http.ResponseWriter, r *http.Request) {
+	log.Println("NetworkTrafficStatusHandler")
+	status := status{active}
+	result, err := json.Marshal(status)
+	if err != nil {
+		http.Error(w, err.Error(), 400)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write([]byte(result))
+}
+

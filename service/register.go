@@ -61,7 +61,8 @@ func RegisterAPIServices(path string, r *mux.Router) {
 	// custom commands
 	api.HandleFunc("/ping", Ping).Methods("GET")
 	api.HandleFunc("/network-traffic", NetworkTrafficHandler).Methods("GET")
-	api.HandleFunc("/network-traffic", NetworkTrafficStartHandler).Methods("POST")
-	api.HandleFunc("/network-traffic", NetworkTrafficStopHandler).Methods("DELETE")
+	api.HandleFunc("/network-traffic-recording", NetworkTrafficStatusHandler).Methods("GET")
+	api.HandleFunc("/network-traffic-recording", NetworkTrafficStartHandler).Methods("POST")
+	api.HandleFunc("/network-traffic-recording", NetworkTrafficStopHandler).Methods("DELETE")
 
 }

@@ -432,6 +432,15 @@ paths:
       responses:
         200:
           description: OK
+  
+  /network-traffic-status:
+    get:
+      summary: Checks if the recording for Network Usage Statistics is active
+      tags:
+        - CustomGUI
+      responses:
+        200:
+          description: OK
     post:
       summary: Start the recording of Network Usage Statistics
       tags:

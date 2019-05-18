@@ -39,6 +39,7 @@ export default {
         asBytes: 'Bytes',
         chartData : {rx:[], tx: []},
         unit: "",
+        activeData: false,
 
        // [ 
        //     {name: 'node1', data: {'2017-01-01 00:00:00 -0800': 3, '2017-01-02 00:00:00 -0800': 4}},
@@ -61,27 +62,27 @@ export default {
                 const self = this
                 if (value){
                     WebServices.networkTrafficOn().then(result => {
-                        this.$store.dispatch("setNetworkTrafficActive", value)
+                        this.activeData = value
                     },error => {
                         self.$store.dispatch('setError', error)
                     })
                 } else {
                     WebServices.networkTrafficOff().then(result => {
-                        this.$store.dispatch("setNetworkTrafficActive", value)
+                        this.activeData = value
                     },error => {
                         self.$store.dispatch('setError', error)
                     })
                 }
             },
             get() {
-                return this.$store.state.isNetworkTrafficActive
+                return this.activeData
             }
         }
     }, 
 
     methods: {
+        // trigger reloading of data which will be diplayed with next call
         updateData() {
-            // trigger reloading of data which will be diplayed with next call
             WebServices.getNetworkTraffic(this.asBytes == 'Bytes').then(result => {
                 this.chartData = result.data
                 this.unit = this.asBytes == 'Bytes' ? '(Bytes)' : '(Packets)'
@@ -89,10 +90,20 @@ export default {
                 this.$store.dispatch('setError', error)
             })
         },
+        // update status with ws
+        updateStatus() {
+            WebServices.getNetworkTrafficStatus(this.asBytes == 'Bytes').then(result => {
+                this.activeData = result.data.Status
+            },error => {
+                console.log(error)
+                this.activeData = false
+            })
+        }
     },
 
     created() {
         this.updateData();
+        this.updateStatus();
         this.timer = setInterval(() => this.updateData(), 5000)
     },
 

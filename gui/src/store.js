@@ -6,7 +6,6 @@ export default new Vuex.Store({
     state: {
         isProcessing: false,
         isActive: true,
-        isNetworkTrafficActive: false,
 
         error: null,
         // navigation
@@ -37,10 +36,6 @@ export default new Vuex.Store({
             state.isActive = active
         },
 
-        SET_NETWORK_TRAFFIC_ACTIVE(state, active) {
-            state.isNetworkTrafficActive = active
-        }
-
     },
     
     actions: {
@@ -68,9 +63,6 @@ export default new Vuex.Store({
             context.commit("SET_NAVIGATION_DAWER_PERMANENT", permanent)
         },
 
-        setNetworkTrafficActive(context, active) {
-            context.commit("SET_NETWORK_TRAFFIC_ACTIVE", active)
-        },
 
     },
 })

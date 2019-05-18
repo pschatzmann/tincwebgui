@@ -167,7 +167,7 @@ export default {
                 thisCtx.resultData.nodes = result.data
                 // convert to display format
                 thisCtx.graph.nodes = thisCtx.resultData.nodes.map(n => {
-                    return {id: n.id, label: n.name, color: '#666', size: 1, ref: n }
+                    return {id: n.id, label: n.name, color: '#6B0700', size: 1, ref: n }
                 })
                 // allocate on cirle
                 thisCtx.graph.nodes.forEach(function(node, i, a) {
