@@ -6,6 +6,7 @@ package service
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -13,7 +14,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"json"
 )
 
 // record for last measurement
@@ -220,11 +220,11 @@ func NetworkTrafficStopHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("OK"))
 }
 
-
 // values for last measurement
 type status struct {
-	Status   bool
+	Status bool
 }
+
 // NetworkTrafficStatusHandler - Provides the information if the network traffic recording is active
 func NetworkTrafficStatusHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("NetworkTrafficStatusHandler")
@@ -237,4 +237,3 @@ func NetworkTrafficStatusHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Write([]byte(result))
 }
-
