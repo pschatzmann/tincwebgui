@@ -173,8 +173,19 @@ export default {
                 thisCtx.graph.nodes.forEach(function(node, i, a) {
                     node.x = Math.cos(Math.PI * 2 * i / a.length);
                     node.y = Math.sin(Math.PI * 2 * i / a.length);
-                });                
-                thisCtx.renderGraph()
+                });         
+                
+                WebServices.getEdges().then(result => {
+                    thisCtx.resultData.edges = result.data
+                    // convert to display format
+                    thisCtx.graph.edges = thisCtx.resultData.edges.map(n => {
+                        return {id: 'id'+n.from+'-'+n.to, source: n.from, target: n.to }
+                    })
+
+                    thisCtx.renderGraph()
+                },error => {
+                    this.$store.dispatch('setError', error)
+                })
 
             },error => {
                 this.$store.dispatch('setError', error)

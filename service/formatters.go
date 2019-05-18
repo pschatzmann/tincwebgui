@@ -99,6 +99,15 @@ func SubnetsFormatter(out []byte) ([]byte, Mime, error) {
 	return parsingFormatter(subnetFields, out)
 }
 
+// EdgesFormatter - onverts dump edges into json object
+// "test1 to tinc at 192.168.224.3 port 655 local 192.168.224.2 port 655 options 700000c weight 3",
+func EdgesFormatter(out []byte) ([]byte, Mime, error) {
+	var edgesFields = []string{"from", "to","at","port","local","port","options","weight" }
+	return parsingFormatter(edgesFields, out)
+}
+
+
+
 // ConnectionsFormatter - converts the info result into an json object
 // dump connections
 // <control> at localhost port unix options 0 socket 11 status 200

@@ -40,8 +40,8 @@ func parseLine(line string, attributes []string) map[string]string {
 		var endName = attributes[pos+1]
 		// split words
 		lineArray := strings.Fields(lineEx)
-		var startPos = find(lineArray, startName) + 1
-		var endPos = find(lineArray, endName)
+		var startPos = find(lineArray, startName, pos) + 1
+		var endPos = find(lineArray, endName, pos)
 		if startPos < endPos {
 			// add value to map
 			attributeValue := strings.Join(lineArray[startPos:endPos], " ")
@@ -55,10 +55,12 @@ func parseLine(line string, attributes []string) map[string]string {
 
 // Find returns the smallest index i at which x == a[i],
 // or len(a) if there is no such index.
-func find(a []string, x string) int {
+func find(a []string, x string, start int) int {
 	for i, n := range a {
-		if x == n {
-			return i
+		if i >= start {
+			if x == n {
+				return i
+			}
 		}
 	}
 	return -1
