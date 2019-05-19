@@ -42,7 +42,7 @@
             </v-tooltip>
             <v-spacer/>
         </v-toolbar>
-        <v-alert :value="error!=null" type="error">{{error}}</v-alert>
+        <v-alert :value="error.msg!=null" :type="error.type">{{error.msg}}</v-alert>
         <v-container fluid>
             <v-card>
                 <v-container fluid>
