@@ -14,8 +14,7 @@
 
 
         </v-toolbar>
-        <v-alert :value="error!=null" type="error">{{error}}</v-alert>
-        <v-progress-linear v-if="isProcessing" :indeterminate="true"/>
+        <v-alert :value="error.msg!=null" :type="error.type">{{error.msg}}</v-alert>
     </div>
 </template>
 
