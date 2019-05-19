@@ -8,7 +8,6 @@ import (
 
 // StartTinc - startup Tinc
 func StartTinc() {
-	setupTincVariables()
 
 	log.Println("starting...")
 	// check if tinc is already started
@@ -31,6 +30,7 @@ func StartTinc() {
 				if err != nil {
 					out, err = exec.Command("tinc", "start").CombinedOutput()
 					log.Println("start:", string(out))
+					// we are ready to setup the variables
 					setupTincVariables()
 					out, err = exec.Command("tinc", "reload").CombinedOutput()
 					log.Println("reload:", string(out))
@@ -39,6 +39,10 @@ func StartTinc() {
 		} else {
 			log.Println("Could not start tinc because the name is not defined")
 		}
+	} else {
+		setupTincVariables()
+		out, err = exec.Command("tinc", "reload").CombinedOutput()
+		log.Println("reload:", string(out))
 	}
 }
 
