@@ -76,7 +76,7 @@
                 var ok = (nodeName) => {
                     WebServices.invite(nodeName).then( result => {
                         console.log(result); 
-                        var msg = 'Please provide the following invitation: '+result.data
+                        var msg = 'The invitation is: '+result.data
                         self.$store.dispatch('setError', {type:'success', msg: msg })
 
                         self.updateInvitations()
