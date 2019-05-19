@@ -240,14 +240,16 @@ export default {
 
         // import a selected file
         doImport() {
+            var self = this
             var input = document.createElement('input');
             input.type = 'file';
             input.onchange = e => { 
                 var file = e.target.files[0]; 
-                WebServices.doImport(file).then(result => {
+                WebServices.doImport(file).then(response => {
+                    self.$store.dispatch('setError', {type:'success', msg: response.data})
                     console.log(result)
                 }).catch((error) => {
-                    self.$store.dispatch('setError', error)
+                    self.$store.dispatch('setError', error.response.data)
                 })           
             }
             input.click();

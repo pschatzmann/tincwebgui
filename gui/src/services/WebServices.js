@@ -66,7 +66,7 @@ const WebServices = {
     async doImport(file) {
         var formData = new FormData();
         formData.append('file', file);
-        return await axios.post(this.url + '/api/import', formData, { headers: { 'Content-Type': 'multipart/form-data'}})
+        return await axios.post(this.url + '/api/import', formData)
     },
 
     // process invite
