@@ -53,7 +53,7 @@ export default new Vuex.Store({
                 errorMsg = error.response.data
             }
             var type = 'error'
-            if (error.type){
+            if (error && error.type){
                 type = error.type
             }
             context.commit("SET_ERROR", {msg: errorMsg, type: type})
