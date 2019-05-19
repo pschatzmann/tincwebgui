@@ -29,9 +29,11 @@ func StartTinc() {
 				out, err = exec.Command("tinc", "init", name).CombinedOutput()
 				log.Println("init:", string(out))
 				if err != nil {
-					setupTincVariables()
 					out, err = exec.Command("tinc", "start").CombinedOutput()
 					log.Println("start:", string(out))
+					setupTincVariables()
+					out, err = exec.Command("tinc", "reload").CombinedOutput()
+					log.Println("reload:", string(out))
 				}
 			}
 		} else {
