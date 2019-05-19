@@ -19,7 +19,7 @@ func StartTinc() {
 		out, err = exec.Command("tinc", "start").CombinedOutput()
 		log.Println("start:", string(out))
 		if err != nil {
-			name, ok := os.LookupEnv("NODENAME")
+			name, ok := os.LookupEnv("NodeName")
 			if !ok {
 				// if the name is not defined we use the (docker) hostname
 				name, ok = os.LookupEnv("HOSTNAME")
@@ -29,6 +29,7 @@ func StartTinc() {
 				out, err = exec.Command("tinc", "init", name).CombinedOutput()
 				log.Println("init:", string(out))
 				if err != nil {
+					setupTincVariables()
 					out, err = exec.Command("tinc", "start").CombinedOutput()
 					log.Println("start:", string(out))
 				}
@@ -44,8 +45,8 @@ func setupTincVariables() {
 	log.Println("setupTincVariables")
 	for _, name := range ListParameterKeys() {
 		key := name
-		if key == "NODENAME" {
-			key = "NAME"
+		if key == "NodeName" {
+			key = "Name"
 		}
 		value, ok := os.LookupEnv(name)
 		if ok {
