@@ -244,7 +244,7 @@ export default {
             input.type = 'file';
             input.onchange = e => { 
                 var file = e.target.files[0]; 
-                WebServices.import(file).then(result => {
+                WebServices.doImport(file).then(result => {
                     console.log(result)
                 }).catch((error) => {
                     self.$store.dispatch('setError', error)
