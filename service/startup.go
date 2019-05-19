@@ -31,7 +31,7 @@ func StartTinc() {
 					log.Println("start:", string(out))
 					// we are ready to setup from the env variables
 					setupTincVariables()
-					out, err = exec.Command("tinc", "reload").CombinedOutput()
+					out, err = exec.Command("tinc", "restart").CombinedOutput()
 					log.Println("reload:", string(out))
 				}
 			}
