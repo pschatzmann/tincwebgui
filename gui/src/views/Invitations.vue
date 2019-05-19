@@ -25,7 +25,7 @@
 
             <v-spacer/>
         </v-toolbar>
-        <v-alert :value="error!=null" type="error">{{error}}</v-alert>
+        <v-alert :value="error!=null" :type="error.type">{{error.msg}}</v-alert>
         <v-container fluid>
             <v-card>
                     <v-data-table
@@ -76,6 +76,9 @@
                 var ok = (nodeName) => {
                     WebServices.invite(nodeName).then( result => {
                         console.log(result); 
+                        var msg = 'Please provide the following invitation: '+result.data
+                        self.$store.dispatch('setError', {type:'success', msg: msg })
+
                         self.updateInvitations()
                     }, err => {
                         self.$store.dispatch('setError', err)

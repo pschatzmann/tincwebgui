@@ -7,7 +7,7 @@ export default new Vuex.Store({
         isProcessing: false,
         isActive: true,
 
-        error: null,
+        error: { msg: null, type:'error'},
         // navigation
         navigationDrawer: {
             permanent: true,
@@ -52,7 +52,11 @@ export default new Vuex.Store({
             if (error && error.response && error.response.data) {
                 errorMsg = error.response.data
             }
-            context.commit("SET_ERROR", errorMsg)
+            var type = 'error'
+            if (error.type){
+                type = error.type
+            }
+            context.commit("SET_ERROR", {msg: errorMsg, type: type})
         },
 
         setNavigationDrawer(context, visible) {

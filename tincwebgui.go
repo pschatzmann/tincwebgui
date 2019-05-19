@@ -22,6 +22,10 @@ func main() {
 	if len(os.Args) >= 2 {
 		address = os.Args[1]
 	}
+
+	// start tinc
+	service.StartTinc()
+
 	r := mux.NewRouter()
 	// setup authrizations
 	auth.Setup(address, r)

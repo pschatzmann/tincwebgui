@@ -27,7 +27,7 @@ func TincParameters(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var parametersKeys = listParameterKeys()
+	var parametersKeys = ListParameterKeys()
 	var result = make([]parameter, len(parametersKeys))
 
 	for i, v := range parametersKeys {
@@ -63,7 +63,7 @@ func getParameterValue(parameterName string) string {
 }
 
 // determines all parameter names
-func listParameterKeys() []string {
+func ListParameterKeys() []string {
 	var parameters = []string{
 		"AddressFamily",
 		"AutoConnect",
