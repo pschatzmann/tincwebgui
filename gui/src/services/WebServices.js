@@ -36,7 +36,6 @@ const WebServices = {
         return await axios.get(this.url + '/api/edges')
     },
 
-
     async get(command) {
         return await axios.get(this.url + '/api/'+command)
     },
@@ -95,6 +94,42 @@ const WebServices = {
     async networkTrafficOff() {
         return await axios.delete(this.url + '/api/network-traffic-recording')
     },
+
+    async ping() {
+        return await axios.get(this.url + '/api/ping')
+    },
+
+    async getParameter(name) {
+        return await axios.get(this.url + '/api/parameter?name='+name)
+    },
+
+    async setParameter(name, value) {
+        return await axios.post(this.url + '/api/parameter',{value: value})
+    },
+
+
+    async init(name){
+        return await axios.post(this.url + '/api/init',{name:name})
+    },
+
+    async remoteExchange(url){
+        return await axios.post(this.url + '/api/remote-exchange', {url: url})
+    },
+
+    async setup(setupData){
+        var initResult = await this.init(setupData.nodeName)        
+        await this.setParameter('Subnet',setupData.subnet)
+        await this.setParameter('VpnIP',setupData.localIP)
+        await this.setParameter('AutoConnect','on')
+        if(setupData.invitation){
+            return await this.joinInvitation(setupData.invitation)
+        }
+        if(setupData.url){
+           return await this.remoteExchange(setupData.url)
+        }
+        return initResult
+    }
+
 
 
 }

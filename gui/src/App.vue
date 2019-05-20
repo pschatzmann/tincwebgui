@@ -20,6 +20,11 @@
                     <v-icon>more_vert</v-icon>
                 </v-btn>
                 <v-list>
+                    <v-list-tile to="/setup">
+                        <v-list-tile-title>Setup</v-list-tile-title>
+                        <v-list-tile-action/>
+                    </v-list-tile>
+
                     <v-list-tile  @click="doRestart()">
                         <v-list-tile-title>Restart</v-list-tile-title>
                         <v-list-tile-action/>
@@ -67,28 +72,36 @@
             },
 
             // update the status in tinc with tincIsActive
-            doOnOff(){
+            doOnOff() {
                 this.$store.dispatch("setError", null)
                 var self = this
-                if (this.tincIsActive){
-                    WebServices.action('start').then( result => {
-                         console.log(result); 
-                        self.tincIsActive = true
-                    }, err => {
-                        self.$store.dispatch('setError', err)
-                        self.tincIsActive = false
-                        // test:
-                          self.tincIsActive = true
-                    })
-                } else {
-                    WebServices.action('stop').then( result => {
-                        console.log(result); 
-                    }, err => {
-                        console.log(err)
-                        //self.$store.dispatch('setError', err)
-                        self.checkOn()
-                    })
-                }
+                WebServices.ping().then( result => {
+                    console.log(result)
+                    if (this.tincIsActive){
+                        WebServices.action('start').then( result => {
+                            console.log(result); 
+                            self.tincIsActive = true
+                        }, err => {
+                            self.$store.dispatch('setError', err)
+                            self.tincIsActive = false
+                            self.$router.push("/setup")
+                            // test:  self.tincIsActive = true
+                        })
+                    } else {
+                        WebServices.action('stop').then( result => {
+                            console.log(result); 
+                        }, err => {
+                            console.log(err)
+                            //self.$store.dispatch('setError', err)
+                            self.checkOn()
+                        })
+                    } 
+                }, err => {
+                    console.log(err)
+                    self.tincIsActive = false
+                    this.$store.dispatch('setError', "The Tinc Webservice is not available")
+                })
+
             },
 
             // restart tinc and then check if it is on
@@ -126,7 +139,6 @@
                     self.$store.dispatch('setError', err)
                 });
             },
-
         }, 
 
         computed: {
@@ -151,10 +163,9 @@
             onOffInfo() {
                 return this.tincIsActive ?  {color:"green", icon:"toggle_on"} : {color:"red", icon:"toggle_off"}
             }
-
         },
 
-        created: function() {
+        created() {
             // setup service URL
             WebServices.url = window.location.origin
         },

@@ -247,7 +247,7 @@ export default {
                 var file = e.target.files[0]; 
                 WebServices.doImport(file).then(response => {
                     self.$store.dispatch('setError', {type:'success', msg: response.data})
-                    console.log(result)
+                    console.log(response)
                 }).catch((error) => {
                     self.$store.dispatch('setError', error.response.data)
                 })           

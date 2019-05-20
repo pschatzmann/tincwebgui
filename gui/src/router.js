@@ -47,5 +47,13 @@ export default new Router({
       name: 'swagger',
       component: () => import('./views/Swagger.vue')
     },
+
+    {
+      path: '/setup',
+      name: 'setup',
+      component: () => import('./views/Setup.vue')
+    },
+
   ]
+
 })

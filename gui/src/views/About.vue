@@ -10,10 +10,12 @@
             <v-container fluid>
               <h2>Tinc Web GUI</h2>
               <h3>Introduction</h3>
-              <p>The Tinc Web GUI provides a user interface for the Tinc VPN. We display the current parameter
-                settings, an overview of the actually defined network and the performance information of the current network traffic.</p> 
-                <p>In the actions menu you can find the most important functions. You can also create new invitations and display the actually existing open invitations.</p>
-                <p>The Tinc functionaliy is also made available via  <a href="/swagger">web-services</a> </p>
+              <p>The Tinc Web GUI provides a user interface for the Tinc VPN.</p> <p>The primary goal of this
+                functionality was to setup new tinc instances with just a few clicks.</p>
+                In the actions menu you can find the most important functions. You can also create new invitations and display the actually existing open invitations.
+                We can also display the current parameter.
+                settings, an overview of the actually defined network and the performance information of the current network traffic.
+                Finally, the whole Tinc functionaliy is also made available via  <a href="/swagger">web-services</a> 
               <h3>Environement Variables</h3>
               <p>All tinc parameters can also be defined with the help of environment variables. The Tinc Web GUI supports the following
               additional environment variables to manage authrizations: </p>
