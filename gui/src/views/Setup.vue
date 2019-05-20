@@ -72,19 +72,19 @@ import WebServices from "@/services/WebServices"
         setupData() {
             var self = this
             WebServices.getParameter("NodeName").then(v => {
-                self.nodeName = v.data
+                self.setup.nodeName = v.data
             }, () => {
                 WebServices.getParameter("Name").then(v => {
-                    self.nodeName = v.data
+                    self.setup.nodeName = v.data
                 })
             })
 
             WebServices.getParameter("Subnet").then(v => {
-                self.subnet = v.data
+                self.setup.subnet = v.data
             })
 
             WebServices.getParameter("VpnIP").then(v => {
-                self.localIP = v.data
+                self.setup.localIP = v.data
             })
         },
 
