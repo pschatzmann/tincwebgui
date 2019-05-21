@@ -1,5 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import { vuexOidcCreateStoreModule } from 'vuex-oidc'
+import { oidcSettings } from '@/config/oidcSettings'
+
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -68,8 +71,10 @@ export default new Vuex.Store({
         setNavigationDrawerPermanent(context, permanent) {
             context.commit("SET_NAVIGATION_DAWER_PERMANENT", permanent)
         },
-
-
     },
+
+    modules: {
+        oidcStore: vuexOidcCreateStoreModule(oidcSettings, { namespaced: false })
+    }
 })
     

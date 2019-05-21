@@ -34,6 +34,11 @@
                         <v-list-tile-title>(Re)generate Keys</v-list-tile-title>
                         <v-list-tile-action/>
                     </v-list-tile>
+
+                     <v-list-tile  @click="signOutOidc()" :disabled="!oidcIsAuthenticated">
+                        <v-list-tile-title>Signout</v-list-tile-title>
+                        <v-list-tile-action />
+                    </v-list-tile>
                 </v-list>
             </v-menu>
 
@@ -50,6 +55,7 @@
 <script>
     import MyNavigationDrawer from "@/components/MyNavigationDrawer";
     import WebServices from '@/services/WebServices'
+    import { mapGetters, mapActions } from 'vuex'
 
     export default {
         name: "my-app",
@@ -101,7 +107,6 @@
                     self.tincIsActive = false
                     this.$store.dispatch('setError', "The Tinc Webservice is not available")
                 })
-
             },
 
             // restart tinc and then check if it is on
@@ -139,9 +144,23 @@
                     self.$store.dispatch('setError', err)
                 });
             },
+
+            ...mapActions([
+            'signOutOidc',
+            'authenticateOidc'
+            ])
+
         }, 
 
         computed: {
+            ...mapGetters([
+                'oidcIsAuthenticated'
+            ]),
+                
+            hasAccess() {
+                return this.oidcIsAuthenticated || this.$route.meta.isPublic
+            },
+
             drawer: {
                 get() {
                     return this.$store.state.navigationDrawer.drawer
@@ -172,6 +191,7 @@
 
         mounted() {
             this.doOnOff()
+            this.authenticateOidc()
         }
     }
 

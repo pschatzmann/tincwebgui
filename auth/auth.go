@@ -83,3 +83,4 @@ func Setup(host string, r *mux.Router) Auth {
 	}
 	return authValue
 }
+
