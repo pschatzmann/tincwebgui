@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"os"
 	"os/exec"
 	"strings"
 
@@ -46,20 +47,33 @@ func TincParameters(w http.ResponseWriter, r *http.Request) {
 	w.Write(b)
 }
 
-// get the parameter value by calling the get command on the tinc interpreter
+// get the parameter value by calling the get command on the tinc interpreter. If there is no result we check the
+// env variable
 func getParameterValue(parameterName string) string {
+	parameterNameNormalized := parameterName
+	if parameterName == "VpnIP" {
+		result, ok := os.LookupEnv(parameterName)
+		if !ok {
+			return ""
+		}
+		return result
+	} else if parameterName == "NodeName" {
+		parameterNameNormalized = "Name"
+	}
+
 	// execute tinc command
-	cmd := exec.Command("tinc", "get", parameterName)
+	cmd := exec.Command("tinc", "get", parameterNameNormalized)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
-		var errorTxt = err.Error()
-		if errorTxt == "exit status 1" {
-			return "-"
+		result, ok := os.LookupEnv(parameterName)
+		if !ok {
+			return ""
 		}
-		return errorTxt
+		return result
 	}
 	var resultStr = string(out)
 	return strings.TrimSpace(resultStr)
+
 }
 
 // determines all parameter names
