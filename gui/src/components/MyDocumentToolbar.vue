@@ -36,11 +36,7 @@
                     return this.$store.state.actualDocumentNumberOfPages
                 }
             },
-            isProcessing: {
-                get() {
-                    return this.$store.state.isProcessing
-                }
-            },
+            
             error: {
                 get() {
                     return this.$store.state.error

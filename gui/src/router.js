@@ -55,14 +55,11 @@ export default new Router({
     },
 
     {
-      path: '/oidc-callback', // Needs to match redirectUri (redirect_uri if you use snake case) in you oidcSettings
-      name: 'oidcCallback',
-      component: () => import('./components/OidcCallback'),
-      meta: {
-        isOidcCallback: true,
-        isPublic: true
-      }
-    }
+      path: '/oidc-callback',
+      name: 'callback',
+      component: () => import('./views/Callback.vue')
+    },
+
   ]
 
 })

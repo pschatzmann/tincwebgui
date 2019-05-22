@@ -1,9 +1,21 @@
 import axios from 'axios'
+import { Mgr } from '@/services/SecurityMgr'
+
 /**
  * Access Tinc functionality via Webservices
  */
 
 const WebServices = {
+
+    async defineHeaderAxios () {
+        await Mgr.getAcessToken().then(
+          acessToken => {
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + acessToken
+          }, err => {
+            console.log(err)
+          })  
+      },
+    
 
     get url() {
         if (!this._url){
@@ -129,8 +141,6 @@ const WebServices = {
         }
         return initResult
     }
-
-
 
 }
 

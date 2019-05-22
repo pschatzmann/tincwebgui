@@ -3,7 +3,7 @@ import './plugins/vuetify'
 import store from '@/store'
 import App from './App.vue'
 import router from './router'
-import { vuexOidcCreateRouterMiddleware } from 'vuex-oidc'
+import { SecurityService } from '@/services/SecurityService'
 
 Vue.config.productionTip = false
 
@@ -14,12 +14,10 @@ new Vue({
 }).$mount('#app')
 
 
-
-
 // Reset errors on each navigation change
-router.beforeEach(vuexOidcCreateRouterMiddleware(store))
 router.beforeEach((to, from, next) => {
   console.log("Navigating to ", to.fullPath)
+  SecurityService.checkLogin(store)
 
   // clear errors when we change the screen
   store.dispatch("setError", null)
@@ -27,3 +25,5 @@ router.beforeEach((to, from, next) => {
   next();
 
 })
+
+

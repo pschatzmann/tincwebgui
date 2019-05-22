@@ -1,14 +1,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { vuexOidcCreateStoreModule } from 'vuex-oidc'
-import { oidcSettings } from '@/config/oidcSettings'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
         isProcessing: false,
-        isActive: true,
+        isLoggedIn: false,
+        isActive: false,
 
         error: { msg: null, type:'error'},
         // navigation
@@ -35,6 +34,10 @@ export default new Vuex.Store({
             state.navigationDrawer.permanent = permanent
         },
 
+        SET_LOGGED_IN(state, active) {
+            state.isLoggedIn = active
+        },
+
         SET_ACTIVE(state, active) {
             state.isActive = active
         },
@@ -44,6 +47,10 @@ export default new Vuex.Store({
     actions: {
         setProcessing(context, status) {
             context.commit("SET_PROCESSING", status)
+        },
+
+        setLoggedIn(context, status) {
+            context.commit("SET_LOGGED_IN", status)
         },
 
         setActive(context, status) {
@@ -71,10 +78,6 @@ export default new Vuex.Store({
         setNavigationDrawerPermanent(context, permanent) {
             context.commit("SET_NAVIGATION_DAWER_PERMANENT", permanent)
         },
-    },
-
-    modules: {
-        oidcStore: vuexOidcCreateStoreModule(oidcSettings, { namespaced: false })
     }
 })
     

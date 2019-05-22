@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Oidc Callback</title>
+</head>
+
+<body>
+    <script src='oidc-client.js'></script>
+    <script>
+    try {
+        var mgr = new Oidc.UserManager({userStore: new Oidc.WebStorageStateStore(), loadUserInfo: true, filterProtocolClaims: true});
+        
+        mgr.signinRedirectCallback().then(function (user) {
+          window.location.href = '../';
+        }).catch(function (err) {
+        console.log(err);
+        });
+    }catch(error){
+        console.log(error)
+    }
+  </script>
+</body>
+
+</html>

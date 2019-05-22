@@ -20,6 +20,11 @@
                     <v-icon>more_vert</v-icon>
                 </v-btn>
                 <v-list>
+                    <v-list-tile  @click="login()" :disabled="isLoggedIn">
+                        <v-list-tile-title>Login</v-list-tile-title>
+                        <v-list-tile-action />
+                    </v-list-tile>
+
                     <v-list-tile to="/setup">
                         <v-list-tile-title>Setup</v-list-tile-title>
                         <v-list-tile-action/>
@@ -35,8 +40,8 @@
                         <v-list-tile-action/>
                     </v-list-tile>
 
-                     <v-list-tile  @click="signOutOidc()" :disabled="!oidcIsAuthenticated">
-                        <v-list-tile-title>Signout</v-list-tile-title>
+                     <v-list-tile  @click="logoff()" :disabled="!isLoggedIn">
+                        <v-list-tile-title>Logoff</v-list-tile-title>
                         <v-list-tile-action />
                     </v-list-tile>
                 </v-list>
@@ -55,7 +60,7 @@
 <script>
     import MyNavigationDrawer from "@/components/MyNavigationDrawer";
     import WebServices from '@/services/WebServices'
-    import { mapGetters, mapActions } from 'vuex'
+    import { SecurityService } from '@/services/SecurityService'
 
     export default {
         name: "my-app",
@@ -90,7 +95,6 @@
                         }, err => {
                             self.$store.dispatch('setError', err)
                             self.tincIsActive = false
-                            self.$router.push("/setup")
                             // test:  self.tincIsActive = true
                         })
                     } else {
@@ -145,17 +149,21 @@
                 });
             },
 
-            ...mapActions([
-            'signOutOidc',
-            'authenticateOidc'
-            ])
+            login() {
+                SecurityService.signIn()
+            },
 
-        }, 
+            logoff() {
+                SecurityService.signOut().then(()=>{
+                    this.isLoggedIn = false
+                }, err => {
+                    this.isLoggedIn = false
+                    self.$store.dispatch('setError', err)
+                })
+            },
+        },
 
         computed: {
-            ...mapGetters([
-                'oidcIsAuthenticated'
-            ]),
                 
             hasAccess() {
                 return this.oidcIsAuthenticated || this.$route.meta.isPublic
@@ -179,6 +187,15 @@
                 }  
             },
 
+            isLoggedIn: {
+                get() {
+                    return this.$store.state.isLoggedIn
+                },
+                set(value) {
+                    this.$store.dispatch('setLoggedIn', value)
+                }  
+            },
+
             onOffInfo() {
                 return this.tincIsActive ?  {color:"green", icon:"toggle_on"} : {color:"red", icon:"toggle_off"}
             }
@@ -187,12 +204,15 @@
         created() {
             // setup service URL
             WebServices.url = window.location.origin
-        },
-
-        mounted() {
+            
+            // activate tinc
             this.doOnOff()
-            this.authenticateOidc()
-        }
+
+            // update login flag
+            SecurityService.isLoggedIn(result).then(()=>{
+                this.isLoggedIn = result
+            })
+        },
     }
 
 </script>

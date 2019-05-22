@@ -1,0 +1,6 @@
+export const oidcSettings = {
+    ...youOidcOtherSettings,
+    silentRedirectUri: 'http://localhost:1337/oidc-silent-renew.html',
+    automaticSilentRenew: true // If true oidc-client will try to renew your token when it is about to expire
+  }
+  

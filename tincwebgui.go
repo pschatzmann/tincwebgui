@@ -7,15 +7,16 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"path"
-	"strings"
 	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/pschatzmann/tincwebgui/auth"
+	"github.com/pschatzmann/tincwebgui/gui"
 	"github.com/pschatzmann/tincwebgui/service"
 	"github.com/pschatzmann/tincwebgui/utils"
 )
+
+var modTime time.Time
 
 func main() {
 	address := "localhost:8000"
@@ -29,15 +30,12 @@ func main() {
 	r := mux.NewRouter()
 	// setup authrizations
 	auth.Setup(address, r)
-	//auth.SetupGoth(address, r)
 
 	// Register API services
 	service.RegisterAPIServices("/api/", r)
 
 	// Serve static assets directly.
-	path := getPath()
-	log.Println("Path is ", path)
-	r.PathPrefix("/").Handler(htmlHandler(path))
+	r.PathPrefix("/").Handler(htmlHandler())
 	// listen on localhost:8000 or as specified in the arg 1
 
 	srv := &http.Server{
@@ -51,8 +49,7 @@ func main() {
 	log.Fatal(srv.ListenAndServe())
 }
 
-func htmlHandler(publicDir string) http.Handler {
-	handler := http.FileServer(http.Dir(publicDir))
+func htmlHandler() http.Handler {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		setupResponse(&w, req)
@@ -61,41 +58,18 @@ func htmlHandler(publicDir string) http.Handler {
 		}
 
 		_path := req.URL.Path
+		file, err := gui.Assets.Open(_path)
 
-		// static files
-		if strings.Contains(_path, ".") || _path == "/" {
-			handler.ServeHTTP(w, req)
+		if err == nil && _path != "/" {
+			defer file.Close()
+			http.ServeContent(w, req, _path, modTime, file)
 			return
 		}
 		// the all 404 gonna be served as root
-		http.ServeFile(w, req, path.Join(publicDir, "/index.html"))
+		file, err = gui.Assets.Open("/index.html")
+		defer file.Close()
+		http.ServeContent(w, req, _path, modTime, file)
 	})
-}
-
-// check if the file exists
-func fileExists(path string) bool {
-	_, err := os.Stat(path)
-	if err == nil {
-		return true
-	}
-	if os.IsNotExist(err) {
-		return false
-	}
-	return true
-}
-
-// determines the path for the javascript resources. It might be in the actual directory or in the dist subdirectory
-func getPath() string {
-	path := ""
-	if len(os.Args) >= 3 {
-		// get path from arguments
-		path = os.Args[2]
-	} else if fileExists("./index.html") {
-		path = "."
-	} else if fileExists("dist/index.html") {
-		path = "dist"
-	}
-	return path
 }
 
 func setupResponse(w *http.ResponseWriter, req *http.Request) {

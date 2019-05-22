@@ -33,6 +33,7 @@
 </template>
 
 <script>
+
 export default {
     name: "about",
     data: () => ({
@@ -41,8 +42,8 @@ export default {
         error() {
             return this.$store.state.error
         },
-    }
-}
+    },
+  }
 </script>
 
 <style>

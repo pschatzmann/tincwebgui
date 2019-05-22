@@ -7,16 +7,19 @@ BINARY_NAME=tincwebgui
 BINARY_UNIX=$(BINARY_NAME)_unix
 
 # Build logic
-all: clean deps dist build
+all: clean deps buildGui build dist
 
 build:
+	cd gui; go generate 
 	$(GOBUILD) ./...
-	cp ../../../../bin/$(BINARY_NAME) ./dist/$(BINARY_NAME)
 
 dist:
+	mkdir -p dist
+	cp ../../../../bin/$(BINARY_NAME) ./dist/$(BINARY_NAME)
+
+buildGui:
 	npm --prefix ./gui install
 	npm --prefix ./gui run build
-	cp -R ./gui/dist/ ./dist/
 
 clean:
 	$(GOCLEAN)
