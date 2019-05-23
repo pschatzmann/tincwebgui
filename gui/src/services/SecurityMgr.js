@@ -13,7 +13,8 @@ export var Mgr = new Oidc.UserManager({
   accessTokenExpiringNotificationTime: 10,
   automaticSilentRenew: true,
   filterProtocolClaims: true,
-  loadUserInfo: true
+  loadUserInfo: true,
+  revokeAccessTokenOnSignout: true
 })
 
 Oidc.Log.logger = console;

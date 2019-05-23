@@ -7,10 +7,9 @@ BINARY_NAME=tincwebgui
 BINARY_UNIX=$(BINARY_NAME)_unix
 
 # Build logic
-all: clean deps buildGui build dist
+all: clean buildGui deps build dist
 
 build:
-	cd gui; go run assets_generate.go 
 	$(GOBUILD) ./...
 
 dist:
@@ -20,11 +19,13 @@ dist:
 buildGui:
 	npm --prefix ./gui install
 	npm --prefix ./gui run build
+	cd gui; go run assets_generate.go 
 
 clean:
 	$(GOCLEAN)
 	rm -f -r ./dist
 	rm -f -r ./gui/dist
+	rm -f ./gui/assets_vfsdata.go
 	rm -f $(BINARY_NAME)
 	rm -f $(BINARY_UNIX)
 

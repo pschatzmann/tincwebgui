@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Mgr } from '@/services/SecurityMgr'
+import { SecurityService } from '@/services/SecurityService'
 
 /**
  * Access Tinc functionality via Webservices
@@ -8,7 +8,7 @@ import { Mgr } from '@/services/SecurityMgr'
 const WebServices = {
 
     async defineHeaderAxios () {
-        await Mgr.getAcessToken().then(
+        await SecurityService.getAcessToken().then(
           acessToken => {
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + acessToken
           }, err => {

@@ -48,7 +48,6 @@ func main() {
 }
 
 func htmlHandler() http.Handler {
-
 	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		setupResponse(&w, req)
 		if (*req).Method == "OPTIONS" {

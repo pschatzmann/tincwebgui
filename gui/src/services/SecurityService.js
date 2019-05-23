@@ -77,7 +77,7 @@ export const SecurityService = {
     },
 
     async checkLogin(store) {
-        if (!store.state.isSignedIn) {
+        if (!store.state.isLoggedIn) {
             var signedIn = await this.isSignedIn()
             if (!signedIn) {
                 var user = await this.Mgr.signinSilent()
