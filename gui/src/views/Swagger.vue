@@ -7,6 +7,7 @@
 <script>
 import SwaggerUI from 'swagger-ui'
 import 'swagger-ui/dist/swagger-ui.css'
+import { SecurityService } from '@/services/SecurityService'
 
 export default {
     name: "swagger",
