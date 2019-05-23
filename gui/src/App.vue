@@ -11,7 +11,7 @@
                 <v-select :value="network" :items="networks" prepend-icon="wifi"/>
             </v-flex>
             
-            <v-btn v-on:click="toggleOnOff()"  fab dark small :color="onOffInfo.color">
+            <v-btn v-on:click="toggleOnOff()" :disabled="!isActive" fab dark small :color="onOffInfo.color">
                 <v-icon dark>{{onOffInfo.icon}}</v-icon>
             </v-btn>
 
