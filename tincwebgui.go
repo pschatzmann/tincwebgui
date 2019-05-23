@@ -16,8 +16,6 @@ import (
 	"github.com/pschatzmann/tincwebgui/utils"
 )
 
-var modTime time.Time
-
 func main() {
 	address := "localhost:8000"
 	if len(os.Args) >= 2 {
@@ -57,18 +55,22 @@ func htmlHandler() http.Handler {
 			return
 		}
 
-		_path := req.URL.Path
-		file, err := gui.Assets.Open(_path)
+		path := req.URL.Path
+		file, err := gui.Assets.Open(path)
 
-		if err == nil && _path != "/" {
+		if err == nil && path != "/" {
 			defer file.Close()
-			http.ServeContent(w, req, _path, modTime, file)
-			return
+			fileInfo, err := file.Stat()
+			if err == nil {
+				http.ServeContent(w, req, path, fileInfo.ModTime(), file)
+				return
+			}
 		}
 		// the all 404 gonna be served as root
 		file, err = gui.Assets.Open("/index.html")
 		defer file.Close()
-		http.ServeContent(w, req, _path, modTime, file)
+		fileInfo, err := file.Stat()
+		http.ServeContent(w, req, path, fileInfo.ModTime(), file)
 	})
 }
 

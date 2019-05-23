@@ -1,5 +1,8 @@
 // +build generate
 
+/**
+/ Generates a go file which contains all resources in the dist folder
+*/
 package main
 
 import (
