@@ -29,7 +29,8 @@ export const SecurityService = {
     async isSignedIn () {
         var user = await Mgr.getUser()
         if (user == null) {
-            return false
+            user = await Mgr.signinSilent()      
+            return user!=null
         }
         return true
     },
