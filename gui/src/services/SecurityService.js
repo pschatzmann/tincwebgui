@@ -79,10 +79,10 @@ export const SecurityService = {
         if (!store.state.isSignedIn) {
             var signedIn = await this.isSignedIn()
             if (!signedIn) {
-                await this.signIn()
-                //store.dispatch('setLoggedIn', true)
+                var user = await this.Mgr.signinSilent()
+                store.dispatch('setLoggedIn', user!=null)
             } else {
-                //store.dispatch('setLoggedIn', true)
+                store.dispatch('setLoggedIn', true)
             }
         }
     }

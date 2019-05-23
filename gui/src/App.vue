@@ -11,7 +11,7 @@
                 <v-select :value="network" :items="networks" prepend-icon="wifi"/>
             </v-flex>
             
-            <v-btn v-on:click="toggleOnOff()" :disabled="!isActive" fab dark small :color="onOffInfo.color">
+            <v-btn v-on:click="toggleOnOff()" :disabled="!isLoggedIn" fab dark small :color="onOffInfo.color">
                 <v-icon dark>{{onOffInfo.icon}}</v-icon>
             </v-btn>
 
@@ -25,17 +25,17 @@
                         <v-list-tile-action />
                     </v-list-tile>
 
-                    <v-list-tile to="/setup" :disabled="!isActive">
+                    <v-list-tile to="/setup" :disabled="!isLoggedIn">
                         <v-list-tile-title>Setup</v-list-tile-title>
                         <v-list-tile-action/>
                     </v-list-tile>
 
-                    <v-list-tile :disabled="!isActive" @click="doRestart()">
+                    <v-list-tile :disabled="!isLoggedIn" @click="doRestart()">
                         <v-list-tile-title>Restart</v-list-tile-title>
                         <v-list-tile-action/>
                     </v-list-tile>
                     
-                    <v-list-tile :disabled="!isActive" @click="action('generate-keys')">
+                    <v-list-tile :disabled="!isLoggedIn" @click="action('generate-keys')">
                         <v-list-tile-title>(Re)generate Keys</v-list-tile-title>
                         <v-list-tile-action/>
                     </v-list-tile>
