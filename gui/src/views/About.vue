@@ -19,7 +19,14 @@
               <h3>Tinc Version</h3>
               This application is using the tinc command line untility which is available since tinc 1.1. Therfore it will not work with any Tinc 1.0.X Releases
               <h3>Installation</h3>
-              The application is provided as Docker image and can be easily started with a docker-compose file. 
+              The application is provided as Docker image and can be easily started with a docker-compose file but you can 
+              build the project in your environment. It relies on the following dependencies
+               <ul>
+                <li>Go</li>
+                <li>Vue with npm</li>
+                <li>make</li>
+              </ul>             
+              The make command will build the tincwebgui executable in the dist directory. 
               <h3>Environement Variables</h3>
               <p>All tinc parameters can also be defined with the help of environment variables. The Tinc Web GUI supports the following
               additional environment variables to manage authrizations: </p>

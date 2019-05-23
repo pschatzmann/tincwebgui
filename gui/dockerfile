@@ -23,7 +23,7 @@ ADD . /opt/tinc-gui/
 RUN make
 
 #
-# Build final consolidated tinc 1.1 image with web-guy 
+# Build final consolidated tinc 1.1 image with web-guim
 #
 FROM alpine:latest as tinc
 RUN apk add bash libpcap lzo openssl readline zlib ncurses
