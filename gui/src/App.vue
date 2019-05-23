@@ -30,7 +30,7 @@
                         <v-list-tile-action/>
                     </v-list-tile>
 
-                    <v-list-tile :disabled="!isLoggedIn" @click="doRestart()">
+                    <v-list-tile :disabled="!isLoggedIn" @click="action('restart')">
                         <v-list-tile-title>Restart</v-list-tile-title>
                         <v-list-tile-action/>
                     </v-list-tile>
@@ -114,17 +114,6 @@
                 })
             },
 
-            // restart tinc and then check if it is on
-            doRestart() {
-                this.$store.dispatch("setError", null)
-                var self = this
-                WebServices.action("restart").then( result => {
-                    console.log(result); 
-                    self.checkOn();
-                }, err => {
-                    self.$store.dispatch('setError', err)
-                });
-            },
 
             // check if tinc is active and update tincIsActive
             checkOn() {
@@ -145,6 +134,7 @@
                 var self = this
                 WebServices.action(action).then( result => {
                     console.log(result); 
+                    self.$store.dispatch('setError', {msg: result.data, type:'success'})
                 }, err => {
                     self.$store.dispatch('setError', err)
                 });

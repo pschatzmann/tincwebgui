@@ -8,12 +8,8 @@ import { SecurityService } from '@/services/SecurityService'
 const WebServices = {
 
     async defineHeaderAxios () {
-        await SecurityService.getAcessToken().then(
-          acessToken => {
-            axios.defaults.headers.common['Authorization'] = 'Bearer ' + acessToken
-          }, err => {
-            console.log(err)
-          })  
+        var acessToken = await SecurityService.getAcessToken()
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + acessToken
       },
     
 
