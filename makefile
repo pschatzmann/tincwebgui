@@ -19,6 +19,7 @@ dist:
 buildGui:
 	npm --prefix ./gui install
 	npm --prefix ./gui run build
+	go get -u github.com/shurcooL/vfsgen
 	cd gui; go run assets_generate.go 
 
 clean:
@@ -34,6 +35,5 @@ run: build
 
 deps:
 	$(GOGET)
-	go get -u github.com/shurcooL/vfsgen
 
 
