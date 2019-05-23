@@ -16,6 +16,10 @@
                 We can also display the current parameter.
                 settings, an overview of the actually defined network and the performance information of the current network traffic.
                 Finally, the whole Tinc functionaliy is also made available via  <a href="/swagger">web-services</a> 
+              <h3>Tinc Version</h3>
+              This application is using the tinc command line untility which is available since tinc 1.1. Therfore it will not work with any Tinc 1.0.X Releases
+              <h3>Installation</h3>
+              The application is provided as Docker image and can be easily started with a docker-compose file. 
               <h3>Environement Variables</h3>
               <p>All tinc parameters can also be defined with the help of environment variables. The Tinc Web GUI supports the following
               additional environment variables to manage authrizations: </p>

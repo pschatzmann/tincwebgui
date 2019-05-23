@@ -210,7 +210,7 @@
             this.checkOn()
 
             // update login flag
-            SecurityService.isLoggedIn(result).then(()=>{
+            SecurityService.isLoggedIn().then(result =>{
                 this.isLoggedIn = result
             })
         },
