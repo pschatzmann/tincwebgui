@@ -45,6 +45,7 @@ func Check(r *http.Request) error {
 
 // checkPassword - checks the password if password management is active
 func checkAuthorization(pwd string) error {
+	log.Println("Authorization", pwd)
 	var result error
 	if !authValue.serviceActive {
 		result = errors.New("The service has not been activated. Please call export SERVICE_ACTIVE=true")
@@ -83,4 +84,3 @@ func Setup(host string, r *mux.Router) Auth {
 	}
 	return authValue
 }
-

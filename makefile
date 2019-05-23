@@ -34,6 +34,5 @@ run: build
 deps:
 	$(GOGET)
 	go get -u github.com/shurcooL/vfsgen
-	go get -u github.com/shurcooL/vfsgen/cmd/vfsgendev
 
 

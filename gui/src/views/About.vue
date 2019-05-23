@@ -10,9 +10,9 @@
             <v-container fluid>
               <h2>Tinc Web GUI</h2>
               <h3>Introduction</h3>
-              <p>The Tinc Web GUI provides a user interface for the Tinc VPN.</p> <p>The primary goal of this
-                functionality was to setup new tinc instances with just a few clicks.</p>
-                In the actions menu you can find the most important functions. You can also create new invitations and display the actually existing open invitations.
+              <p>The Tinc Web GUI provides a user interface for the <a href="https://www.tinc-vpn.org/">Tinc VPN</a> .</p> <p>The primary goal of this
+                functionality is to help to setup a new tinc instance with just a few clicks.</p>
+                In the actions menu you can find the most important general functions. You can also create new invitations and display the actual existing open invitations.
                 We can also display the current parameter.
                 settings, an overview of the actually defined network and the performance information of the current network traffic.
                 Finally, the whole Tinc functionaliy is also made available via  <a href="/swagger">web-services</a> 

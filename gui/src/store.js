@@ -78,6 +78,11 @@ export default new Vuex.Store({
         setNavigationDrawerPermanent(context, permanent) {
             context.commit("SET_NAVIGATION_DAWER_PERMANENT", permanent)
         },
-    }
+    },
+
+    getters: {
+        isEnabled: state => state.isLoggedIn && state.isActive
+      }
+    
 })
     

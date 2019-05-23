@@ -25,17 +25,17 @@
                         <v-list-tile-action />
                     </v-list-tile>
 
-                    <v-list-tile to="/setup">
+                    <v-list-tile to="/setup" :disabled="!isActive">
                         <v-list-tile-title>Setup</v-list-tile-title>
                         <v-list-tile-action/>
                     </v-list-tile>
 
-                    <v-list-tile  @click="doRestart()">
+                    <v-list-tile :disabled="!isActive" @click="doRestart()">
                         <v-list-tile-title>Restart</v-list-tile-title>
                         <v-list-tile-action/>
                     </v-list-tile>
                     
-                    <v-list-tile  @click="action('generate-keys')">
+                    <v-list-tile :disabled="!isActive" @click="action('generate-keys')">
                         <v-list-tile-title>(Re)generate Keys</v-list-tile-title>
                         <v-list-tile-action/>
                     </v-list-tile>
@@ -165,10 +165,6 @@
 
         computed: {
                 
-            hasAccess() {
-                return this.oidcIsAuthenticated || this.$route.meta.isPublic
-            },
-
             drawer: {
                 get() {
                     return this.$store.state.navigationDrawer.drawer
@@ -196,6 +192,11 @@
                 }  
             },
 
+            isActive() {
+                return this.$store.getters.isEnabled
+            },
+
+
             onOffInfo() {
                 return this.tincIsActive ?  {color:"green", icon:"toggle_on"} : {color:"red", icon:"toggle_off"}
             }
@@ -205,8 +206,8 @@
             // setup service URL
             WebServices.url = window.location.origin
             
-            // activate tinc
-            this.doOnOff()
+            // update tinc status
+            this.checkOn()
 
             // update login flag
             SecurityService.isLoggedIn(result).then(()=>{

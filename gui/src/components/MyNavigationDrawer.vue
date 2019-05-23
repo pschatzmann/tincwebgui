@@ -118,7 +118,7 @@
                 }
             },
             isActive() {
-                return this.$store.state.isActive
+                return this.$store.getters.isEnabled
             }
         },
 
