@@ -10,7 +10,7 @@ BINARY_UNIX=$(BINARY_NAME)_unix
 all: clean deps buildGui build dist
 
 build:
-	cd gui; go generate 
+	cd gui; go run assets_generate.go 
 	$(GOBUILD) ./...
 
 dist:
@@ -33,5 +33,7 @@ run: build
 
 deps:
 	$(GOGET)
+	go get -u github.com/shurcooL/vfsgen
+	go get -u github.com/shurcooL/vfsgen/cmd/vfsgendev
 
 
