@@ -204,16 +204,26 @@
 
         created() {
             // setup service URL
+            var self = this
             WebServices.url = window.location.origin
-            
-            // update tinc status
-            this.checkOn()
+
+            Mgr.events.addUserLoaded(user => {  
+                self.checkOn()
+            })
+        
+            Mgr.events.addUserSignedOut(() => {
+                self.isLoggedIn = false
+            })
 
             // update login flag
             SecurityService.isSignedIn().then(result =>{
-                this.isLoggedIn = result
+                self.isLoggedIn = result
+                // update tinc status
+                this.checkOn()
             })
+
         },
+
     }
 
 </script>

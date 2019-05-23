@@ -20,7 +20,7 @@ Oidc.Log.logger = console;
 Oidc.Log.level = Oidc.Log.INFO;
 
 Mgr.events.addUserLoaded(function (user) {  
-  console.log('New User Loaded：', arguments);
+  console.log('New User Loaded：', user);
   console.log('Acess_token: ', user.access_token)
 });
 
