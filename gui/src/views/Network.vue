@@ -9,7 +9,7 @@
                 <span>Export host configuration of local node </span>
                 <template v-slot:activator="{ on }">
                     <v-btn v-on="on" v-on:click="saveAs('export')" >
-                        <v-icon>cloud</v-icon>
+                        <v-icon>mdi-file-export</v-icon>
                     </v-btn>   
                 </template>
             </v-tooltip>
@@ -18,7 +18,7 @@
                 <span>Export all host configuration files</span>
                 <template v-slot:activator="{ on }">
                     <v-btn v-on="on" v-on:click="saveAs('export-all')" >
-                        <v-icon>cloud_circle</v-icon>
+                        <v-icon>mdi-database-export</v-icon>
                     </v-btn>   
                 </template>
             </v-tooltip>
@@ -27,7 +27,7 @@
                 <span>Import host configuration file(s)</span>
                 <template v-slot:activator="{ on }">
                     <v-btn v-on="on" v-on:click="doImport()"  >
-                        <v-icon>cloud_download</v-icon>
+                        <v-icon>mdi-file-import</v-icon>
                     </v-btn>   
                 </template>
             </v-tooltip>
