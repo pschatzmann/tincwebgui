@@ -198,7 +198,7 @@ func writeData(buf *bytes.Buffer, asBytes bool, rx bool) {
 
 // NetworkTrafficHandler - Provides the recorded network statistics as JSON to http
 func NetworkTrafficHandler(w http.ResponseWriter, r *http.Request) {
-	bytes := getHTTPParameterValue(r, "bytes") == "true"
+	bytes := getHTTPParameterValue(r, nil, "bytes") == "true"
 	log.Println("NetworkTrafficHandler:", bytes)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(GetNetworkTrafficInJSON(bytes))

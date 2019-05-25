@@ -7,7 +7,6 @@ package service
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -107,15 +106,20 @@ func (cmd *Command) commandHandler(w http.ResponseWriter, r *http.Request) {
 
 // getCommands - Determine the commands from the Command and optionally from the url
 func (cmd *Command) getCommands(r *http.Request) ([]string, error) {
+	bodyBytes, err := ioutil.ReadAll(r.Body)
+	mapFromJSON := make(map[string]string)
+	if err != nil && len(bodyBytes) > 0 {
+		json.Unmarshal(bodyBytes, &mapFromJSON)
+	}
 	commands := cmd.commands[:]
 	if cmd.parameterName != "" {
-		var parNameValue = getHTTPParameterValue(r, cmd.parameterName)
+		var parNameValue = getHTTPParameterValue(r, &mapFromJSON, cmd.parameterName)
 		if parNameValue == "" {
 			return commands, errors.New("The parameter is mandatory: " + cmd.parameterName)
 		}
 		commands = append(commands, parNameValue)
 		if cmd.valueName != "" {
-			parValueValue := getHTTPParameterValue(r, cmd.valueName)
+			parValueValue := getHTTPParameterValue(r, &mapFromJSON, cmd.valueName)
 			if parValueValue == "" {
 				return commands, errors.New("The value is mandatory: " + cmd.valueName)
 			}
@@ -126,13 +130,13 @@ func (cmd *Command) getCommands(r *http.Request) ([]string, error) {
 }
 
 // determine the parmameter value from the url, the form or from json
-func getHTTPParameterValue(r *http.Request, name string) string {
+func getHTTPParameterValue(r *http.Request, mapFromJSON *map[string]string, name string) string {
 	result := getQueryParam(r, name)
 	if result == "" {
 		result = getFormParam(r, name)
 	}
 	if result == "" {
-		result = getJSONParam(r, name)
+		result = getJSONParam(mapFromJSON, name)
 	}
 	return result
 }
@@ -151,22 +155,12 @@ func getFormParam(r *http.Request, name string) string {
 	return parNameValue
 }
 
-func getJSONParam(r *http.Request, name string) string {
-	bodyBytes, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		log.Println("Could not read body:", err)
-		return ""
+func getJSONParam(mapFromJSON *map[string]string, name string) string {
+	resultStr := ""
+	if (mapFromJSON!=nil){
+		resultStr = (*mapFromJSON)[name]
 	}
-	log.Println("body:", string(bodyBytes))
-	mapFromJSON := make(map[string]interface{})
-	err = json.Unmarshal(bodyBytes, &mapFromJSON)
-	if err != nil {
-		log.Println("Could not unmarshal json:", err)
-		return ""
-	}
-	resultInterface := mapFromJSON[name]
-	resultStr := fmt.Sprint(resultInterface)
-	log.Println("result:", resultStr)
+	log.Println("%s -> %s ", name, resultStr)
 	return resultStr
 }
 

@@ -92,7 +92,7 @@ func writeRemoteConfiguration(url string, configData string) error {
 }
 
 func getURL(r *http.Request) string {
-	result := getHTTPParameterValue(r, "url")
+	result := getHTTPParameterValue(r, nil, "url")
 	if result == "" {
 		return ""
 	}
