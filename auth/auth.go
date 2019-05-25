@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	"github.com/gorilla/mux"
+	"github.com/pascaldekloe/jwt"
 )
 
 // Auth - authentication management information
@@ -22,16 +23,6 @@ type Auth struct {
 }
 
 var authValue = Auth{"", false, false}
-
-// Generate - Generates a new Password
-func Generate() string {
-	f, _ := os.Open("/dev/urandom")
-	b := make([]byte, 16)
-	f.Read(b)
-	f.Close()
-	pwd := fmt.Sprintf("%x-%x-%x-%x-%x", b[0:4], b[4:6], b[6:8], b[8:10], b[10:])
-	return pwd
-}
 
 // Check - checks the password which is passed as bearer Authorization token
 func Check(r *http.Request) error {
@@ -44,15 +35,13 @@ func Check(r *http.Request) error {
 }
 
 // checkPassword - checks the password if password management is active
-func checkAuthorization(pwd string) error {
-	log.Println("Authorization", pwd)
+func checkAuthorization(token string) error {
+	log.Println("Authorization", token)
 	var result error
 	if !authValue.serviceActive {
 		result = errors.New("The service has not been activated. Please call export SERVICE_ACTIVE=true")
 	} else {
-		if authValue.passwordActive && pwd != authValue.password {
-			result = errors.New("The password is not valid")
-		}
+		result = checkToken(token)
 	}
 	return result
 }
@@ -65,16 +54,6 @@ func Setup(host string, r *mux.Router) Auth {
 		passwordActiveParameter := os.Getenv("PASSWORD_ACTIVE")
 		if passwordActiveParameter != "false" {
 			authValue.passwordActive = true
-
-			// we set the passoword if it has been defined, otherwise we generate one
-			passwordParameter := os.Getenv("PASSWORD")
-			if passwordParameter != "" {
-				authValue.password = passwordParameter
-				log.Println("The password management is active - please use your defined password to authenticate the webservices")
-			} else {
-				authValue.password = Generate()
-				log.Println("Please use the following password to authenticate the webservices: ", authValue.password)
-			}
 		} else {
 			// no password necessary
 			authValue.passwordActive = false
@@ -83,4 +62,46 @@ func Setup(host string, r *mux.Router) Auth {
 		authValue.serviceActive = false
 	}
 	return authValue
+}
+
+func checkToken(tokenString string) error {
+	// verify a JWT
+
+	return nil
+}
+
+func getPublicKey() *string {
+	env := os.Getenv("SERVICE_ACTIVE")
+	return &env
+}
+
+func checkClaims(claims *jwt.Claims) error {
+	claimsString := os.Getenv("PASSWORD_ACTIVE")
+	claimsArray := strings.Split(claimsString, ";")
+
+	for _, claim := range claimsArray {
+		key, values := splitClaim(claim)
+		claimValue, ok := claims.String(key)
+		if !ok || claimValue == "" {
+			return fmt.Errorf("The expected claim '%q' is empty ", key)
+		}
+		if !(contains(values, claimValue)) {
+			return fmt.Errorf("The expected claim '%q' with value '%q' is not valid ", key, claimValue)
+		}
+	}
+	return nil
+}
+
+func contains(s []string, e string) bool {
+	for _, a := range s {
+		if a == e {
+			return true
+		}
+	}
+	return false
+}
+
+func splitClaim(claim string) (string, []string) {
+	sa := strings.Split(claim, "=")
+	return sa[0], strings.Split(sa[1], ",")
 }

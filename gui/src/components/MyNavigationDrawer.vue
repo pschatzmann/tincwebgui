@@ -17,7 +17,8 @@
             <!-- Minimize Navigator -->
             <v-list-tile @click="toggleMiniDrawer">
                 <v-list-tile-action>
-                    <v-icon>aspect_ratio</v-icon>
+                   <v-icon v-if="drawerMini">mdi-chevron-double-right</v-icon>  
+                   <v-icon v-if="!drawerMini">mdi-chevron-double-left</v-icon>  
                 </v-list-tile-action>
             </v-list-tile>
 
@@ -43,26 +44,6 @@
                 </v-list-tile-content>
             </v-list-tile>
 
-            <!-- Network -->
-            <v-list-tile v-if="isActive"  to="/network">
-                <v-list-tile-action>
-                    <v-icon>network_check</v-icon>
-                </v-list-tile-action>
-                <v-list-tile-content>
-                    <v-list-tile-title>Network</v-list-tile-title>
-                </v-list-tile-content>
-            </v-list-tile>
-
-            <!-- Ping -->
-            <v-list-tile v-if="isActive"  to="/performance">
-                <v-list-tile-action>
-                    <v-icon>bar_chart</v-icon>
-                </v-list-tile-action>
-                <v-list-tile-content>
-                    <v-list-tile-title>Performance</v-list-tile-title>
-                </v-list-tile-content>
-            </v-list-tile>
-            
             <!-- Invitations -->
             <v-list-tile v-if="isActive" to="/invitations">
                 <v-list-tile-action>
@@ -73,6 +54,27 @@
                 </v-list-tile-content>
             </v-list-tile>
 
+            <!-- Network -->
+            <v-list-tile v-if="isActive"  to="/network">
+                <v-list-tile-action>
+                    <v-icon>network_check</v-icon>
+                </v-list-tile-action>
+                <v-list-tile-content>
+                    <v-list-tile-title>Network</v-list-tile-title>
+                </v-list-tile-content>
+            </v-list-tile>
+
+
+            <!-- Perfrmance -->
+            <v-list-tile v-if="isActive"  to="/performance">
+                <v-list-tile-action>
+                    <v-icon>bar_chart</v-icon>
+                </v-list-tile-action>
+                <v-list-tile-content>
+                    <v-list-tile-title>Performance</v-list-tile-title>
+                </v-list-tile-content>
+            </v-list-tile>
+            
              <!-- Swagger -->
             <v-list-tile to="/swagger">
                 <v-list-tile-action>

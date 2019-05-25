@@ -476,6 +476,23 @@ paths:
         200:
           description: OK
 
+  /config/{name}:
+    delete:
+      summary: delete the host configurations  
+      tags:
+        - CustomGUI
+      parameters:
+        - in: configuration name
+          name: name
+          schema:
+            type: string
+          required: true
+          description: configuration name
+
+      responses:
+        200:
+          description: OK
+
 
 components:
   schemas:

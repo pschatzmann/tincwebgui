@@ -157,6 +157,11 @@ const WebServices = {
            return await this.remoteExchange(setupData.url)
         }
         return initResult
+    },
+
+    async deleteConfig(name){
+        await this.defineHeaderAxios();
+        return await axios.delete(this.url + '/api/config/' + name )
     }
 
 }

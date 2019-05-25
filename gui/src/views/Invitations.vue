@@ -9,7 +9,7 @@
                 <span>Generate an Invitation for a Node</span>
                 <template v-slot:activator="{ on }">
                     <v-btn v-on="on" v-on:click="invite()" >
-                        <v-icon>cloud_upload</v-icon>
+                        <v-icon>mdi-account-arrow-right</v-icon>
                     </v-btn>   
                 </template>
             </v-tooltip>
@@ -18,7 +18,7 @@
                 <span>Join a VPN using an Invitation</span>
                 <template v-slot:activator="{ on }">
                     <v-btn v-on="on" v-on:click="joinInvite()" >
-                       <v-icon>cloud_download</v-icon>
+                       <v-icon>mdi-account-plus</v-icon>
                     </v-btn>   
                 </template>
             </v-tooltip>

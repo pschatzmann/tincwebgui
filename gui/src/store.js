@@ -58,6 +58,10 @@ export default new Vuex.Store({
         },
 
         setError(context, error) {
+            if (error==null) {
+                context.commit("SET_ERROR", {msg: null})
+                return
+            }  
             var errorMsg = error
             if (error && error.response && error.response.data) {
                 errorMsg = error.response.data
@@ -68,6 +72,7 @@ export default new Vuex.Store({
             if (error && error.type){
                 type = error.type
             }
+            errorMsg = errorMsg.split("\n").join("<br>")
             context.commit("SET_ERROR", {msg: errorMsg, type: type})
         },
 
