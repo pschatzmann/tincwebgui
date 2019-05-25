@@ -7,6 +7,8 @@ package service
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os/exec"
@@ -150,13 +152,21 @@ func getFormParam(r *http.Request, name string) string {
 }
 
 func getJSONParam(r *http.Request, name string) string {
-	decoder := json.NewDecoder(r.Body)
-	mapFromJSON := make(map[string]string)
-	err := decoder.Decode(&mapFromJSON)
+	bodyBytes, err := ioutil.ReadAll(r.Body)
 	if err != nil {
+		log.Println("Could not read body:", err)
 		return ""
 	}
-	return mapFromJSON[name]
+	log.Println("body:", string(bodyBytes))
+	mapFromJSON := make(map[string]interface{})
+	err = json.Unmarshal(bodyBytes, &mapFromJSON)
+	if err != nil {
+		log.Println("Could not unmarshal json:", err)
+		return ""
+	}
+	result := mapFromJSON[name]
+	log.Println("result:", result)
+	return fmt.Sprint("%s", result)
 }
 
 func getErrorText(t1 string, t2 string) string {
