@@ -8,7 +8,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// ConfigDelete -
+// ConfigDelete - Deletes the Config File if it does already exists
 func ConfigDelete(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	fileName := "/etc/tinc/" + vars["name"] + ".conf"

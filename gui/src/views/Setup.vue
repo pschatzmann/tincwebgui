@@ -4,7 +4,9 @@
 
 <template>
     <div >
-        <v-alert :value="error.msg!=null" :type="error.type">{{error.msg}}</v-alert>
+        <v-alert :value="error.msg!=null" :type="error.type">
+            <span v-html="error.msg"></span>
+        </v-alert>
         <v-container grid-list-md >
             <v-stepper v-model="stepperModel">
                 <v-stepper-header>
@@ -99,7 +101,7 @@ import WebServices from "@/services/WebServices"
         },
 
         async setupNodeAsync() {
-            await  WebServices.deleteConfig(this.nodeName)
+            await  WebServices.deleteConfig(this.setup.nodeName)
             return await  WebServices.setup(this.setup)
         }
 

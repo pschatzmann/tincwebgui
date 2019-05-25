@@ -72,7 +72,8 @@ export default new Vuex.Store({
             if (error && error.type){
                 type = error.type
             }
-            errorMsg = errorMsg.split("\n").join("<br>")
+            errorMsg = errorMsg.trim()
+            errorMsg = errorMsg.split("\n").join("<br/>")
             context.commit("SET_ERROR", {msg: errorMsg, type: type})
         },
 
