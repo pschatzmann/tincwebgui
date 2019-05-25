@@ -165,7 +165,7 @@ func getJSONParam(r *http.Request, name string) string {
 		return ""
 	}
 	resultInterface := mapFromJSON[name]
-	resultStr := fmt.Sprint("%s", resultInterface)
+	resultStr := fmt.Sprint(resultInterface)
 	log.Println("result:", resultStr)
 	return resultStr
 }
