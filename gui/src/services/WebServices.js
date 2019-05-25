@@ -131,7 +131,7 @@ const WebServices = {
 
     async setParameter(name, value) {
         await this.defineHeaderAxios();
-        return await axios.post(this.url + '/api/parameter',{value: value})
+        return await axios.post(this.url + '/api/parameter',{name: name, value: value})
     },
 
 

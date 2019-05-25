@@ -135,7 +135,7 @@ paths:
     post:
       summary: Partially reload configuration of running tincd
       tags:
-        - Management
+        - Configuration
       responses:
         '200':    # status code
           description: OK
@@ -153,7 +153,7 @@ paths:
     post:
       summary: Same as export followed by import
       tags:
-        - Management
+        - Configuration
       responses:
         '200':    # status code
           description: OK
@@ -162,7 +162,7 @@ paths:
     post:
       summary: Same as export-all followed by import
       tags:
-        - Management
+        - Configuration
       responses:
         '200':    # status code
           description: OK
@@ -207,7 +207,7 @@ paths:
     post:
       summary: Export host configuration of local node 
       tags:
-        - Management
+        - Configuration
       responses:
         '200':    # status code
           description: OK
@@ -216,7 +216,7 @@ paths:
     post:
       summary: Export all host configuration files 
       tags:
-        - Management
+        - Configuration
       responses:
         '200':    # status code
           description: OK
@@ -225,7 +225,7 @@ paths:
     post:
       summary: import host configuration files 
       tags:
-        - Management
+        - Configuration
       requestBody:
         required: true
         content:
@@ -480,7 +480,7 @@ paths:
     delete:
       summary: delete the host configurations  
       tags:
-        - CustomGUI
+        - Configuration
       parameters:
         - in: configuration name
           name: name
