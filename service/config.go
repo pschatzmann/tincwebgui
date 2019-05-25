@@ -16,6 +16,10 @@ func ConfigDelete(w http.ResponseWriter, r *http.Request) {
 	if err == nil {
 		log.Printf("File %s exists and will be deleted", fileName)
 		err = os.Remove(fileName)
+		if err != nil {
+			log.Println("File %s could not be deleted", fileName)
+			http.Error(w, err.Error(), 400)
+		}
 	} else if os.IsNotExist(err) {
 		log.Printf("File %s not exists - so no deletion necessary", fileName)
 	} else {
