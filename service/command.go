@@ -164,9 +164,10 @@ func getJSONParam(r *http.Request, name string) string {
 		log.Println("Could not unmarshal json:", err)
 		return ""
 	}
-	result := mapFromJSON[name]
-	log.Println("result:", result)
-	return fmt.Sprint("%s", result)
+	resultInterface := mapFromJSON[name]
+	resultStr := fmt.Sprint("%s", resultInterface)
+	log.Println("result:", resultStr)
+	return resultStr
 }
 
 func getErrorText(t1 string, t2 string) string {
