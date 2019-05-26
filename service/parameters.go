@@ -51,13 +51,7 @@ func TincParameters(w http.ResponseWriter, r *http.Request) {
 // env variable
 func getParameterValue(parameterName string) string {
 	parameterNameNormalized := parameterName
-	if parameterName == "VpnIP" {
-		result, ok := os.LookupEnv(parameterName)
-		if !ok {
-			return ""
-		}
-		return result
-	} else if parameterName == "NodeName" {
+	if parameterName == "NodeName" {
 		parameterNameNormalized = "Name"
 	}
 
@@ -76,7 +70,7 @@ func getParameterValue(parameterName string) string {
 
 }
 
-// determines all parameter names
+// ListParameterKeys - determines all parameter names
 func ListParameterKeys() []string {
 	var parameters = []string{
 		"AddressFamily",

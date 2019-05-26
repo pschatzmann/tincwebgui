@@ -147,9 +147,11 @@
             logoff() {
                 SecurityService.signOut().then(()=>{
                     this.isLoggedIn = false
+                    this.$router.push("/")
                 }, err => {
                     this.isLoggedIn = false
                     self.$store.dispatch('setError', err)
+                    this.$router.push("/")
                 })
             },
         },
