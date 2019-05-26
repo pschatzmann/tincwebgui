@@ -54,9 +54,9 @@ func RegisterAPIServices(path string, r *mux.Router) {
 	api.HandleFunc("/parameter", NewCommand3(CommandFormatter, "name", "get").Handler()).Methods("GET")
 	api.HandleFunc("/parameter", NewCommand3(CommandFormatter, "name", "del").Handler()).Methods("DELETE")
 
-	// commadns with 2 parameters
-	api.HandleFunc("/parameter", NewCommand4(CommandFormatter, "name", "value", "add").Handler()).Methods("POST")
-	api.HandleFunc("/parameter", NewCommand4(CommandFormatter, "name", "value", "set").Handler()).Methods("PUT")
+	// commands with 2 parameters
+	api.HandleFunc("/parameter", NewCommand4(CommandFormatter, "name", "value", "--force", "add").Handler()).Methods("POST")
+	api.HandleFunc("/parameter", NewCommand4(CommandFormatter, "name", "value", "--force", "set").Handler()).Methods("PUT")
 
 	// custom commands
 	api.HandleFunc("/ping", Ping).Methods("GET")
