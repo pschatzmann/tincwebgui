@@ -22,7 +22,9 @@ func RemoteExchange(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Println("->import")
 	importRemoteConfig(url, w, r)
+	log.Println("->export")
 	exportLocalConfig(url, w, r)
 
 	// success message

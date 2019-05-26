@@ -157,7 +157,7 @@ const WebServices = {
         if (setupData.invitation){
             return await this.joinInvitation(setupData.invitation)
         } else if (setupData.connectTo){
-            await this.setParameter('AutoConnect','on')
+            await this.setParameter('AutoConnect','yes')
             return await this.remoteExchange(setupData.connectTo)
         }
         return initResult
