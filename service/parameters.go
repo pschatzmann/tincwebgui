@@ -57,7 +57,7 @@ func getParameterValue(parameterName string) string {
 
 	// execute tinc command
 	cmd := exec.Command("tinc", "get", parameterNameNormalized)
-	out, err := cmd.CombinedOutput()
+	out, err := cmd.Output()
 	if err != nil {
 		result, ok := os.LookupEnv(parameterName)
 		if !ok {
