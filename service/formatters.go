@@ -102,11 +102,9 @@ func SubnetsFormatter(out []byte) ([]byte, Mime, error) {
 // EdgesFormatter - onverts dump edges into json object
 // "test1 to tinc at 192.168.224.3 port 655 local 192.168.224.2 port 655 options 700000c weight 3",
 func EdgesFormatter(out []byte) ([]byte, Mime, error) {
-	var edgesFields = []string{"from", "to","at","port","local","port","options","weight" }
+	var edgesFields = []string{"from", "to", "at", "port", "local", "port", "options", "weight"}
 	return parsingFormatter(edgesFields, out)
 }
-
-
 
 // ConnectionsFormatter - converts the info result into an json object
 // dump connections
@@ -204,13 +202,14 @@ func toArray(out []byte) []string {
 	return array
 }
 
-// GetFormatter - get might contain warnings which we just ignore!
+// GetFormatter - get might contain warnings which we ignore!
 func GetFormatter(out []byte) ([]byte, Mime, error) {
 	sa := strings.Split(strings.Replace(string(out[:]), "\r\n", "\n", -1), "\n")
 	result := ""
-	if (len(sa)>0){
-		result = sa[len(sa)-1]
+	for _, line := range sa {
+		if line != "" && !strings.HasPrefix(line, "Warning") {
+			result = line
+		}
 	}
 	return []byte(result), "text/plain", nil
 }
-
