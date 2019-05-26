@@ -108,7 +108,8 @@ func (cmd *Command) commandHandler(w http.ResponseWriter, r *http.Request) {
 func (cmd *Command) getCommands(r *http.Request) ([]string, error) {
 	bodyBytes, err := ioutil.ReadAll(r.Body)
 	mapFromJSON := make(map[string]string)
-	if err != nil && len(bodyBytes) > 0 {
+	if err == nil && len(bodyBytes) > 0 {
+		log.Println("body:", string(bodyBytes))
 		json.Unmarshal(bodyBytes, &mapFromJSON)
 	}
 	commands := cmd.commands[:]
@@ -157,10 +158,10 @@ func getFormParam(r *http.Request, name string) string {
 
 func getJSONParam(mapFromJSON *map[string]string, name string) string {
 	resultStr := ""
-	if (mapFromJSON!=nil){
+	if mapFromJSON != nil {
 		resultStr = (*mapFromJSON)[name]
 	}
-	log.Println("%s -> %s ", name, resultStr)
+	log.Println(name, "->", resultStr)
 	return resultStr
 }
 
