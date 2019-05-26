@@ -146,21 +146,19 @@ const WebServices = {
 
     async setup(setupData){
         // remove old config
-        await this.deleteConfig(this.setup.connectTo)
-        await this.deleteConfig(this.setup.nodeName)
+        await this.deleteConfig(setupData.connectTo)
+        await this.deleteConfig(setupData.nodeName)
         
         var initResult = await this.init(setupData.nodeName)        
         await this.setParameter('Subnet',setupData.subnet)
         await this.setParameter('VpnIP',setupData.localIP)
         await this.setParameter('ConnectTo',setupData.connectTo)
-        if (setupData.connectTo){
-            await this.setParameter('AutoConnect','on')
-        }
-        if(setupData.invitation){
+
+        if (setupData.invitation){
             return await this.joinInvitation(setupData.invitation)
-        }
-        if(setupData.connectTo){
-           return await this.remoteExchange(setupData.connectTo)
+        } else if (setupData.connectTo){
+            await this.setParameter('AutoConnect','on')
+            return await this.remoteExchange(setupData.connectTo)
         }
         return initResult
     },
