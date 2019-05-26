@@ -33,6 +33,16 @@
             </v-tooltip>
 
             <v-tooltip bottom>
+                <span>Exchange configuration files with ConnectTo</span>
+                <template v-slot:activator="{ on }">
+                    <v-btn v-on="on" v-on:click="exchangeConfiguration()"  >
+                        <v-icon>mdi-animation</v-icon>
+                    </v-btn>   
+                </template>
+            </v-tooltip>
+
+
+            <v-tooltip bottom>
                 <span>Purge unreachable nodes</span>
                 <template v-slot:activator="{ on }">
                     <v-btn v-on="on" v-on:click="purge()"  >
@@ -255,6 +265,20 @@ export default {
                 })           
             }
             input.click();
+        },
+
+        // exchange the configuration files with the connectTo instance
+        exchangeConfiguration(){
+            const self = this
+            WebServces.getParameter("ConnectTo").then(connectTo => {
+                WebServices.remoteExchange(connectTo).then(result => {
+                    self.$store.dispatch('setError', {type:'success', msg: result})
+                }, error => {
+                    self.$store.dispatch('setError', error)
+                })
+            }, error => {
+                self.$store.dispatch('setError', error)
+            })
         },
 
         // purge unreachable nodes

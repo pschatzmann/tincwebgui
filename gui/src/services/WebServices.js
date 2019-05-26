@@ -149,12 +149,14 @@ const WebServices = {
         var initResult = await this.init(setupData.nodeName)        
         await this.setParameter('Subnet',setupData.subnet)
         await this.setParameter('VpnIP',setupData.localIP)
+        await this.setParameter('ConnectTo',setupData.connectTo)
         await this.setParameter('AutoConnect','on')
+        
         if(setupData.invitation){
             return await this.joinInvitation(setupData.invitation)
         }
-        if(setupData.url){
-           return await this.remoteExchange(setupData.url)
+        if(setupData.connectTo){
+           return await this.remoteExchange(setupData.connectTo)
         }
         return initResult
     },

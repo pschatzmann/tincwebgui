@@ -22,8 +22,8 @@
                         class="mb-5">
                             <v-flex xs12 >
                                 <div class="myRadio"><input type="radio" value="standAlone" v-model="mode"> New (Initial) Node </div>
-                                <div class="myRadio"><input type="radio" value="invitation" v-model="mode"> New Node with Tinc Invitation</div>
                                 <div class="myRadio"><input type="radio" value="web" v-model="mode"> New Node with existing Web GUI</div>
+                                <div class="myRadio"><input type="radio" value="invitation" v-model="mode"> New Node with Tinc Invitation</div>
                             </v-flex>
                         </v-container>
                         <div class="mySpace"/>
@@ -33,13 +33,12 @@
                     </v-stepper-content>
 
                     <v-stepper-content step="2">
-
                         <v-text-field v-model="setup.nodeName" label="Node Name"></v-text-field>
                         <v-text-field v-model="setup.subnet" label="Subnet"></v-text-field>
                         <v-text-field v-model="setup.localIP" label="Local IP"></v-text-field>
 
                         <v-text-field v-model="setup.invitation" v-if="mode=='invitation'" label="Invitation"></v-text-field>
-                        <v-text-field v-model="setup.url" v-if="mode=='web'" label="URL to Existing Node"></v-text-field>
+                        <v-text-field v-model="setup.connectTo" v-if="mode=='web'" label="ConnectTo"></v-text-field>
                         <div/>
                         <v-btn flat @click="stepperModel = 1">Back</v-btn>
                         <v-btn flat to="/">Cancel</v-btn>
@@ -65,7 +64,7 @@ import WebServices from "@/services/WebServices"
                 subnet: '',
                 localIP: '',
                 invitation: '',
-                url: ''
+                connectTo: ''
             }
         }
     },
@@ -87,6 +86,10 @@ import WebServices from "@/services/WebServices"
 
             WebServices.getParameter("VpnIP").then(v => {
                 self.setup.localIP = v.data
+            })
+
+            WebServices.getParameter("ConnectTo").then(v => {
+                self.setup.connectTo = v.data
             })
         },
 
