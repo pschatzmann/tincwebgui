@@ -152,7 +152,9 @@ func ListParameterKeys() []string {
 		"PublicKeyFile",
 		"Subnet",
 		"TCPOnly",
-		"Weight"}
+		"Weight",
+		/* GUI configuration */
+		"VpnIP"}
 
 	return parameters
 
