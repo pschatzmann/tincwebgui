@@ -134,15 +134,15 @@ const WebServices = {
         return await axios.post(this.url + '/api/parameter',{name: name, value: value})
     },
 
-
     async init(name){
         await this.defineHeaderAxios();
         return await axios.post(this.url + '/api/init',{name:name})
     },
 
-    async remoteExchange(url){
+    async remoteExchange(connectTo) {
+        await this.deleteConfig(connectTo)
         await this.defineHeaderAxios();
-        return await axios.post(this.url + '/api/remote-exchange', {url: url})
+        return await axios.post(this.url + '/api/remote-exchange', {url: connectTo})
     },
 
     async setup(setupData){
