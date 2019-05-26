@@ -140,18 +140,22 @@ const WebServices = {
     },
 
     async remoteExchange(connectTo) {
-        await this.deleteConfig(connectTo)
         await this.defineHeaderAxios();
         return await axios.post(this.url + '/api/remote-exchange', {url: connectTo})
     },
 
     async setup(setupData){
+        // remove old config
+        await this.deleteConfig(this.setup.connectTo)
+        await this.deleteConfig(this.setup.nodeName)
+        
         var initResult = await this.init(setupData.nodeName)        
         await this.setParameter('Subnet',setupData.subnet)
         await this.setParameter('VpnIP',setupData.localIP)
         await this.setParameter('ConnectTo',setupData.connectTo)
-        await this.setParameter('AutoConnect','on')
-        
+        if (setupData.connectTo){
+            await this.setParameter('AutoConnect','on')
+        }
         if(setupData.invitation){
             return await this.joinInvitation(setupData.invitation)
         }

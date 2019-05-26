@@ -95,18 +95,13 @@ import WebServices from "@/services/WebServices"
 
         setupNode() {
             var self = this
-            this.setupNodeAsync().then(result => {
+            WebServices.setup(this.setup).then(result => {
                 self.$store.dispatch('setError', { mode:'success', msg: result.data })
                 self.$router.push('/network') 
             }, err => {
                 self.$store.dispatch('setError', err)
             })
         },
-
-        async setupNodeAsync() {
-            await  WebServices.deleteConfig(this.setup.nodeName)
-            return await  WebServices.setup(this.setup)
-        }
 
     },
 
