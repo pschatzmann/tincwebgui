@@ -203,3 +203,14 @@ func toArray(out []byte) []string {
 	var array = strings.Split(str, "\n")
 	return array
 }
+
+// GetFormatter - get might contain warnings which we just ignore!
+func GetFormatter(out []byte) ([]byte, Mime, error) {
+	sa := strings.Split(strings.Replace(string(out[:]), "\r\n", "\n", -1), "\n")
+	result := ""
+	if (len(sa)>0){
+		result = sa[len(sa)-1]
+	}
+	return []byte(result), "text/plain", nil
+}
+
