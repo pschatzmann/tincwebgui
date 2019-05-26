@@ -50,7 +50,7 @@ func importRemoteConfig(url string, w http.ResponseWriter, r *http.Request) {
 
 // get the configuration file from the remote system
 func getRemoteConfiguration(url string) (string, error) {
-	log.Println("URL:", url)
+	log.Println("getRemoteConfiguration from URL:", url)
 
 	req, err := http.NewRequest("GET", url, nil)
 	client := &http.Client{}
@@ -79,12 +79,13 @@ func exportLocalConfig(url string, w http.ResponseWriter, r *http.Request) {
 
 // post the configuration file to the remote system
 func writeRemoteConfiguration(url string, configData string) error {
-	log.Println("URL:", url)
+	log.Println("writeRemoteConfiguration to URL:", url)
 
 	req, err := http.NewRequest("POST", url+"/import", strings.NewReader(configData))
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
+		log.Println("Error posting configuration file to url", err.Error)
 		return err
 	}
 	defer resp.Body.Close()
