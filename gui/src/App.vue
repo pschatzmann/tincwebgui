@@ -145,6 +145,7 @@
                 // show login screen
                 SecurityService.signIn().then(() => {
                     console.log("login")
+                    checkOn()
                 }, err => {
                     self.$store.dispatch('setError', err)
                 })
@@ -222,9 +223,7 @@
                 // we might be signed in already
                 mgr.isSignedIn().then(signedIn => {
                     self.isLoggedIn = signedIn
-                    if (signedIn){
-                        self.checkOn()
-                    }
+                    self.checkOn()
                 })
             
                 mgr.events.addUserSignedOut(() => {

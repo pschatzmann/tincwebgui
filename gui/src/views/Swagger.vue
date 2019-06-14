@@ -16,8 +16,8 @@ export default {
     }),
 
     created() {
-        SecurityService.getAcessToken().then(accessToken => {
-            this.token = accessToken
+        SecurityService.getIdToken().then(token => {
+            this.token = token
         })
     },
 
