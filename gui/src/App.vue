@@ -61,7 +61,6 @@
     import MyNavigationDrawer from "@/components/MyNavigationDrawer";
     import WebServices from '@/services/WebServices'
     import { SecurityService } from '@/services/SecurityService'
-    import { Mgr } from '@/services/SecurityMgr'
 
     export default {
         name: "my-app",
@@ -200,15 +199,20 @@
             var self = this
             WebServices.url = window.location.origin
 
-            Mgr.events.addUserLoaded(user => { 
-                console.log("addUserLoaded", user) 
-                self.checkOn()
+            SecurityService.getMgr().then(mgr => {
+                mgr.events.addUserLoaded(user => { 
+                    console.log("addUserLoaded", user) 
+                    self.checkOn()
+                })
+            
+                mgr.events.addUserSignedOut(() => {
+                    console.log("addUserSignedOut")
+                    self.isLoggedIn = false
+                })
+
             })
-        
-            Mgr.events.addUserSignedOut(() => {
-                console.log("addUserSignedOut")
-                self.isLoggedIn = false
-            })
+
+
 
             // update login flag
             SecurityService.isSignedIn().then(result =>{

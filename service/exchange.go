@@ -82,6 +82,7 @@ func writeRemoteConfiguration(url string, configData string) error {
 	log.Println("writeRemoteConfiguration to URL:", url)
 
 	req, err := http.NewRequest("POST", url+"/import", strings.NewReader(configData))
+//    req.Header.Set("X-Custom-Header", "myvalue")
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {

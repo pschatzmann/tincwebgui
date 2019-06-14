@@ -8,7 +8,7 @@ import { SecurityService } from '@/services/SecurityService'
 const WebServices = {
 
     async defineHeaderAxios () {
-        var acessToken = await SecurityService.getAcessToken()
+        var acessToken = await SecurityService.getIdToken()
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + acessToken
       },
     
@@ -166,8 +166,12 @@ const WebServices = {
     async deleteConfig(name){
         await this.defineHeaderAxios();
         return await axios.delete(this.url + '/api/config/' + name )
-    }
+    },
 
+    async getAuth(){
+        return await axios.get(this.url + '/api/auth')
+    }
+ 
 }
 
 export default WebServices

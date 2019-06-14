@@ -1,11 +1,47 @@
 import 'babel-polyfill';
-import { Mgr } from '@/services/SecurityMgr'
+import Oidc from 'oidc-client';
+import 'babel-polyfill';import WebServices from '@/services/WebServices'
+
+var _mgr=null;
+Oidc.Log.logger = console;
+Oidc.Log.level = Oidc.Log.INFO;
 
 export const SecurityService = {
+    // Returns a Oidc.UserManager
+    async getMgr() {
+        if (_mgr==null) {
+            const auth = await WebServices.getAuth()
+            // check the result
+            if (!auth.ProviderUrl){
+                throw new Error("The ProviderUrl is not defined");
+            }
+            if (!auth.ClientId){
+                throw new Error("The ClientId is not defined");
+            }
+
+            _mgr = new Oidc.UserManager({
+                userStore: new Oidc.WebStorageStateStore({store: localStorage}),  
+                authority: auth.ProviderUrl,
+                client_id: auth.ClientId,
+                redirect_uri: window.location.origin + '/oidc-callback',
+                response_type: 'id_token',
+                scope: 'openid profile email',
+                post_logout_redirect_uri: window.location.origin + '/',
+                silent_redirect_uri: window.location.origin + '/silent-renew.html',
+                accessTokenExpiringNotificationTime: 10,
+                automaticSilentRenew: true,
+                filterProtocolClaims: true,
+                loadUserInfo: true,
+                revokeAccessTokenOnSignout: true
+            })
+        }        
+        return _mgr
+    },
 
     // Renew the token manually
-    async renewToken () {        
-      var user = await Mgr.signinSilent()
+    async renewToken () {       
+      var mgr = await this.getMgr()
+      var user = await mgr.signinSilent()
       if (user == null) {
             return await this.signIn(null)
       }
@@ -13,12 +49,14 @@ export const SecurityService = {
     },
 
     async signinRedirectCallback() {
-        return await Mgr.signinRedirectCallback()
+        var mgr = await this.getMgr()
+        return await mgr.signinRedirectCallback()
     },
   
     // Get the user who is logged in
     async getUser () {
-      var user = await Mgr.getUser()
+        var mgr = await this.getMgr()
+        var user = await mgr.getUser()
       if (user==null){
           return await this.signIn()
       }
@@ -27,9 +65,10 @@ export const SecurityService = {
   
     // Check if there is any user logged in
     async isSignedIn () {
-        var user = await Mgr.getUser()
+        var mgr = await this.getMgr()
+        var user = await mgr.getUser()
         if (user == null) {
-            user = await Mgr.signinSilent()      
+            user = await mgr.signinSilent()      
             return user!=null
         }
         return true
@@ -37,50 +76,58 @@ export const SecurityService = {
   
     // Redirect of the current window to the authorization endpoint.
     async signIn () {
-        return await Mgr.signinRedirect()
+        var mgr = await this.getMgr()
+        return await mgr.signinRedirect()
     },
     
     // Redirect of the current window to the end session endpoint
     async signOut () {    
-        return await Mgr.signoutRedirect()
+        var mgr = await this.getMgr()
+        return await mgr.signoutRedirect()
     },
   
     // Get the token id
     async getIdToken() {
-        var user = await Mgr.getUser()
+        var mgr = await this.getMgr()
+        var user = await mgr.getUser()
         return user!=null ? user.id_token : null
     },
   
     // Get the session state
     async getSessionState() {
-        var user = await Mgr.getUser()
+        var mgr = await this.getMgr()
+        var user = await mgr.getUser()
         return user!=null ? user.session_state : null
     },
   
     // Get the access token of the logged in user
-    async getAcessToken(){
-        var user = await Mgr.getUser()
+    async getAccessToken(){
+        var mgr = await this.getMgr()
+        var user = await mgr.getUser()
         return user!=null ? user.access_token : null
     },
   
     // Takes the scopes of the logged in user
     async getScopes() {
-        var user = await Mgr.getUser()
+        var mgr = await this.getMgr()
+        var user = await mgr.getUser()
         return user!=null ? user.scopes : null
 
     },
 
     // Get the user roles logged in
     async getRole () {
-        var user = await Mgr.getUser()
+        var mgr = await this.getMgr()
+        var user = await mgr.getUser()
         return user!=null ? user.profile.role : null
     },
 
     async checkLogin(store) {
         if (!store.state.isLoggedIn) {
+            var mgr = await this.getMgr()
             var signedIn = await this.isSignedIn()
             if (!signedIn) {
-                var user = await this.Mgr.signinSilent()
+                var user = await mgr.signinSilent()
                 store.dispatch('setLoggedIn', user!=null)
             } else {
                 store.dispatch('setLoggedIn', true)

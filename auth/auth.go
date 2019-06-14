@@ -4,6 +4,7 @@ package auth
 * Simple Password management for the tinc webservices.
  */
 import (
+	"context"
 	"errors"
 	"fmt"
 	"log"
@@ -11,18 +12,26 @@ import (
 	"os"
 	"strings"
 
+	"github.com/antonmedv/expr"
+	oidc "github.com/coreos/go-oidc"
 	"github.com/gorilla/mux"
-	"github.com/pascaldekloe/jwt"
+	"golang.org/x/oauth2"
 )
 
 // Auth - authentication management information
 type Auth struct {
-	password       string
 	passwordActive bool
 	serviceActive  bool
 }
 
-var authValue = Auth{"", false, false}
+var authValue = Auth{true, true}
+
+// Authenticator - Authenticator
+type Authenticator struct {
+	provider     *oidc.Provider
+	clientConfig oauth2.Config
+	ctx          context.Context
+}
 
 // Check - checks the password which is passed as bearer Authorization token
 func Check(r *http.Request) error {
@@ -34,14 +43,14 @@ func Check(r *http.Request) error {
 	return checkAuthorization(reqToken)
 }
 
-// checkPassword - checks the password if password management is active
+// checkAuthorization - checks the authorization token if password management is active
 func checkAuthorization(token string) error {
 	log.Println("Authorization", token)
 	var result error
 	if !authValue.serviceActive {
 		result = errors.New("The service has not been activated. Please call export SERVICE_ACTIVE=true")
 	} else {
-		result = checkToken(token)
+		result = checkToken(strings.TrimSpace(token))
 	}
 	return result
 }
@@ -65,43 +74,86 @@ func Setup(host string, r *mux.Router) Auth {
 }
 
 func checkToken(tokenString string) error {
-	// verify a JWT
+	ctx := context.Background()
+	provider, err := oidc.NewProvider(ctx, *getProviderUrl())
+	if err != nil {
+		log.Fatalf("Failed to get provider: %v", err)
+	}
+
+	config := oauth2.Config{
+		ClientID:     *getClientId(),
+		ClientSecret: *getClientSecret(),
+		Endpoint:     provider.Endpoint(),
+		Scopes:       []string{oidc.ScopeOpenID, "profile", "email"},
+	}
+
+	oidcConfig := &oidc.Config{
+		ClientID: config.ClientID,
+	}
+
+	a := &Authenticator{
+		provider:     provider,
+		clientConfig: config,
+		ctx:          ctx,
+	}
+
+	idToken, err := a.provider.Verifier(oidcConfig).Verify(a.ctx, tokenString)
+	if err != nil {
+		log.Println("Error: Could not decode token", err)
+		return err
+	}
+
+	claimsMap := make(map[string]interface{})
+	idToken.Claims(&claimsMap)
+
+	// get claims to map
+	for k, v := range claimsMap {
+		fmt.Println("key:", k, "value:", v)
+	}
+
+	evalStr := *getClaimsEval()
+	if evalStr != "" {
+		out, err := expr.Eval(evalStr, claimsMap)
+		if err != nil {
+			log.Println("Error: Could not evaluate claims", err)
+			return err
+		}
+
+		evalResult := fmt.Sprint(out)
+		if evalResult != "false" {
+			log.Println("Claims Evaluation is "+evalResult, err)
+			return errors.New("Evaluation result is " + evalResult)
+		}
+	}
 
 	return nil
 }
 
-func getPublicKey() *string {
-	env := os.Getenv("SERVICE_ACTIVE")
+func getProviderUrl() *string {
+	env := os.Getenv("PROVIDER_URL")
+	if env == "" {
+		env = "https://accounts.google.com"
+	}
 	return &env
 }
 
-func checkClaims(claims *jwt.Claims) error {
-	claimsString := os.Getenv("PASSWORD_ACTIVE")
-	claimsArray := strings.Split(claimsString, ";")
-
-	for _, claim := range claimsArray {
-		key, values := splitClaim(claim)
-		claimValue, ok := claims.String(key)
-		if !ok || claimValue == "" {
-			return fmt.Errorf("The expected claim '%q' is empty ", key)
-		}
-		if !(contains(values, claimValue)) {
-			return fmt.Errorf("The expected claim '%q' with value '%q' is not valid ", key, claimValue)
-		}
+func getClientId() *string {
+	id := os.Getenv("CLIENT_ID")
+	if id == "" {
+		id = "284017214914-apb6s5blmmcc49e6prbqhqj497bvghfh.apps.googleusercontent.com"
 	}
-	return nil
+	return &id
 }
 
-func contains(s []string, e string) bool {
-	for _, a := range s {
-		if a == e {
-			return true
-		}
+func getClientSecret() *string {
+	secret := os.Getenv("CLIENT_SECRET")
+	if secret == "" {
+		secret = "eHcyZAhY762tV9xmzyIjippj"
 	}
-	return false
+	return &secret
 }
 
-func splitClaim(claim string) (string, []string) {
-	sa := strings.Split(claim, "=")
-	return sa[0], strings.Split(sa[1], ",")
+func getClaimsEval() *string {
+	claims := os.Getenv("CLAIMS")
+	return &claims
 }

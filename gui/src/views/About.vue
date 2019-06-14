@@ -36,7 +36,10 @@
               <ul>
                 <li>SERVICE_ACTIVE: true or false</li>
                 <li>PASSWORD_ACTIVE: true or false</li>
-                <li>PASSWORD</li>
+                <li>PROVIDER_URL</li>
+                <li>CLIENT_ID</li>
+                <li>CLIENT_SECRET</li>
+                <li>CLAIMS</li>
               </ul>
               </p>
             </v-container>

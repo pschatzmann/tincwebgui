@@ -5,6 +5,7 @@ package service
  */
 import (
 	"github.com/gorilla/mux"
+	"github.com/pschatzmann/tincwebgui/auth"
 )
 
 //RegisterAPIServices - defines the handler functions for the /api/ services
@@ -66,5 +67,6 @@ func RegisterAPIServices(path string, r *mux.Router) {
 	api.HandleFunc("/network-traffic-recording", NetworkTrafficStopHandler).Methods("DELETE")
 	api.HandleFunc("/remote-exchange", RemoteExchange).Methods("POST")
 	api.HandleFunc("/config/{name}", ConfigDelete).Methods("DELETE")
+	api.HandleFunc("/auth", auth.AuthInfo).Methods("GET")
 
 }
