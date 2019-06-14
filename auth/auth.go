@@ -75,13 +75,13 @@ func Setup(host string, r *mux.Router) Auth {
 
 func checkToken(tokenString string) error {
 	ctx := context.Background()
-	provider, err := oidc.NewProvider(ctx, *getProviderUrl())
+	provider, err := oidc.NewProvider(ctx, *getProviderURL())
 	if err != nil {
 		log.Fatalf("Failed to get provider: %v", err)
 	}
 
 	config := oauth2.Config{
-		ClientID:     *getClientId(),
+		ClientID:     *getClientID(),
 		ClientSecret: *getClientSecret(),
 		Endpoint:     provider.Endpoint(),
 		Scopes:       []string{oidc.ScopeOpenID, "profile", "email"},
@@ -129,12 +129,12 @@ func checkToken(tokenString string) error {
 	return nil
 }
 
-func getProviderUrl() *string {
+func getProviderURL() *string {
 	env := os.Getenv("PROVIDER_URL")
 	return &env
 }
 
-func getClientId() *string {
+func getClientID() *string {
 	id := os.Getenv("CLIENT_ID")
 	return &id
 }
