@@ -91,7 +91,7 @@ export const SecurityService = {
         var mgr = await this.getMgr()
         const result = await mgr.signoutRedirect()
         // remove the user from the cookies/database
-        mgr.removeUser()
+        await mgr.removeUser()
 
         return result  
     },

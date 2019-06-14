@@ -159,7 +159,7 @@
                     self.isLoggedIn = false
                     console.log("logoff", err)
                     // we do not really care if the endpoint does not support a logoff
-                    if (err != "no end session endpoint"){
+                    if (err && err.message != "no end session endpoint"){
                         self.$store.dispatch('setError', err)
                     }
                     self.$router.push("/")
