@@ -145,7 +145,7 @@
                 // show login screen
                 SecurityService.signIn().then(() => {
                     console.log("login")
-                    checkOn()
+                    self.checkOn()
                 }, err => {
                     self.$store.dispatch('setError', err)
                 })
