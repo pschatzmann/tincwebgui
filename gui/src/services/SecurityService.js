@@ -26,7 +26,7 @@ export const SecurityService = {
                 throw new Error("The ClientId is not defined");
             }
             _mgr = new Oidc.UserManager({
-                userStore: new Oidc.WebStorageStateStore({store: localStorage}),  
+                // userStore: new Oidc.WebStorageStateStore({store: localStorage}),  
                 authority: auth.ProviderUrl,
                 client_id: auth.ClientId,
                 redirect_uri: window.location.origin + '/oidc-callback',
@@ -36,7 +36,7 @@ export const SecurityService = {
                 silent_redirect_uri: window.location.origin + '/silent-renew.html',
                 accessTokenExpiringNotificationTime: 10,
                 automaticSilentRenew: true,
-                filterProtocolClaims: true,
+                filterProtocolClaims: false,
                 loadUserInfo: true,
                 revokeAccessTokenOnSignout: true
             })
@@ -89,7 +89,11 @@ export const SecurityService = {
     // Redirect of the current window to the end session endpoint
     async signOut () {    
         var mgr = await this.getMgr()
-        return await mgr.signoutRedirect()
+        const result = await mgr.signoutRedirect()
+        // remove the user from the cookies/database
+        mgr.removeUser()
+
+        return result  
     },
   
     // Get the token id

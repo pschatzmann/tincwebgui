@@ -79,16 +79,16 @@
             // activate / deactivate tinc
             toggleOnOff() {
                 this.tincIsActive = !this.tincIsActive
-                this.doOnOff()
+                this.doOnOff(this.tincIsActive)
             },
 
             // update the status in tinc with tincIsActive
-            doOnOff() {
+            doOnOff(value) {
                 this.$store.dispatch("setError", null)
                 var self = this
                 WebServices.ping().then( result => {
                     console.log(result)
-                    if (this.tincIsActive){
+                    if (value){
                         WebServices.action('start').then( result => {
                             console.log(result); 
                             self.tincIsActive = true
@@ -98,6 +98,7 @@
                             // test:  self.tincIsActive = true
                         })
                     } else {
+                        self.tincIsActive = false
                         WebServices.action('stop').then( result => {
                             console.log(result); 
                         }, err => {
@@ -141,6 +142,7 @@
 
             login() {
                 var self = this
+                // show login screen
                 SecurityService.signIn().then(() => {
                     console.log("login")
                 }, err => {
@@ -155,7 +157,11 @@
                     self.$router.push("/")
                 }, err => {
                     self.isLoggedIn = false
-                    self.$store.dispatch('setError', err)
+                    console.log("logoff", err)
+                    // we do not really care if the endpoint does not support a logoff
+                    if (err != "no end session endpoint"){
+                        self.$store.dispatch('setError', err)
+                    }
                     self.$router.push("/")
                 })
             },
