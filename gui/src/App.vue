@@ -214,18 +214,22 @@
 
             // manage this.isLoggedIn
             SecurityService.getMgr().then(mgr => {
+                // we might be signed in already
+                SecurityService.isSignedIn().then(signedIn => {
+                    self.isLoggedIn = signedIn
+                    console.log("isSignedIn -> ", signedIn) 
+                    if (signedIn){
+                        self.checkOn()
+                    }
+                })
+
                 // we mignt sign on later
                 mgr.events.addUserLoaded(user => { 
                     console.log("addUserLoaded", user) 
                     self.checkOn()
                 }, error => console.log(error))
 
-                // we might be signed in already
-                mgr.isSignedIn().then(signedIn => {
-                    self.isLoggedIn = signedIn
-                    self.checkOn()
-                })
-            
+
                 mgr.events.addUserSignedOut(() => {
                     console.log("addUserSignedOut")
                     self.isLoggedIn = false
