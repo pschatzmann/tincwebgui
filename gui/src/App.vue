@@ -141,8 +141,8 @@
 
             login() {
                 var self = this
-                SecurityService.signIn().then(r => {
-                    console.log("login", r)
+                SecurityService.signIn().then(() => {
+                    console.log("login")
                 }, err => {
                     self.$store.dispatch('setError', err)
                 })
@@ -207,10 +207,19 @@
 
             // manage this.isLoggedIn
             SecurityService.getMgr().then(mgr => {
+                // we mignt sign on later
                 mgr.events.addUserLoaded(user => { 
                     console.log("addUserLoaded", user) 
                     self.checkOn()
                 }, error => console.log(error))
+
+                // we might be signed in already
+                mgr.isSignedIn().then(signedIn => {
+                    self.isLoggedIn = signedIn
+                    if (signedIn){
+                        self.checkOn()
+                    }
+                })
             
                 mgr.events.addUserSignedOut(() => {
                     console.log("addUserSignedOut")

@@ -25,11 +25,6 @@ export default new Router({
       component: () => import('./views/Invitations.vue')
     },
     
-    {
-      path: '/manual',
-      name: 'manual',
-      component: () => import('./views/Manual.vue')
-    },
 
     {
       path: '/performance',

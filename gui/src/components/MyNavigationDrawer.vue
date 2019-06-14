@@ -85,15 +85,6 @@
                 </v-list-tile-content>
             </v-list-tile>
 
-             <!-- Manual -->
-            <v-list-tile to="/manual">
-                <v-list-tile-action>
-                    <v-icon>help</v-icon>
-                </v-list-tile-action>
-                <v-list-tile-content>
-                    <v-list-tile-title>Tinc Manual</v-list-tile-title>
-                </v-list-tile-content>
-            </v-list-tile>
         </v-list>
     </v-navigation-drawer>
 </template>
