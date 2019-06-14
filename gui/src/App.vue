@@ -142,13 +142,20 @@
 
             login() {
                 var self = this
-                // show login screen
-                SecurityService.signIn().then(() => {
-                    console.log("login")
-                    self.checkOn()
-                }, err => {
-                    self.$store.dispatch('setError', err)
-                })
+                SecurityService.getMgr().then(mgr => {
+                    // we sign on later
+                    mgr.events.addUserLoaded(user => { 
+                        console.log("addUserLoaded", user) 
+                        self.checkOn()
+                    }, error => console.log(error))
+
+                    // show login screen
+                    SecurityService.signIn().then(() => {
+                        console.log("login")
+                    }, err => {
+                        self.$store.dispatch('setError', err)
+                    })
+                 })
             },
 
             logoff() {
@@ -215,20 +222,6 @@
             // manage this.isLoggedIn
             SecurityService.getMgr().then(mgr => {
                 // we might be signed in already
-                SecurityService.isSignedIn().then(signedIn => {
-                    self.isLoggedIn = signedIn
-                    console.log("isSignedIn -> ", signedIn) 
-                    if (signedIn){
-                        self.checkOn()
-                    }
-                })
-
-                // we mignt sign on later
-                mgr.events.addUserLoaded(user => { 
-                    console.log("addUserLoaded", user) 
-                    self.checkOn()
-                }, error => console.log(error))
-
 
                 mgr.events.addUserSignedOut(() => {
                     console.log("addUserSignedOut")
@@ -236,15 +229,14 @@
                 },error => console.log(error))
             })
 
-
-            // update login flag
-            SecurityService.isSignedIn().then(result => {
-                self.isLoggedIn = result
-                // update tinc status - we need to be logged in for this to work
-                if (result){
-                    this.checkOn()
-                }
-            })
+            // // update login flag
+            // SecurityService.isSignedIn().then(result => {
+            //     self.isLoggedIn = result
+            //     // update tinc status - we need to be logged in for this to work
+            //     if (result){
+            //         this.checkOn()
+            //     }
+            // })
 
         },
 
