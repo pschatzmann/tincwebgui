@@ -10,15 +10,21 @@ export const SecurityService = {
     // Returns a Oidc.UserManager
     async getMgr() {
         if (_mgr==null) {
-            const auth = await WebServices.getAuth()
+            const response = await WebServices.getAuth()
+            if (response.status!=200) {
+                throw new Error("The Auth Service did not return a valid status");
+            }
             // check the result
+            const auth =  response.data
+            if (!auth){
+                throw new Error("The Auth Service did not return a valid result");
+            }
             if (!auth.ProviderUrl){
                 throw new Error("The ProviderUrl is not defined");
             }
             if (!auth.ClientId){
                 throw new Error("The ClientId is not defined");
             }
-
             _mgr = new Oidc.UserManager({
                 userStore: new Oidc.WebStorageStateStore({store: localStorage}),  
                 authority: auth.ProviderUrl,
