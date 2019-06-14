@@ -131,25 +131,16 @@ func checkToken(tokenString string) error {
 
 func getProviderUrl() *string {
 	env := os.Getenv("PROVIDER_URL")
-	if env == "" {
-		env = "https://accounts.google.com"
-	}
 	return &env
 }
 
 func getClientId() *string {
 	id := os.Getenv("CLIENT_ID")
-	if id == "" {
-		id = "284017214914-apb6s5blmmcc49e6prbqhqj497bvghfh.apps.googleusercontent.com"
-	}
 	return &id
 }
 
 func getClientSecret() *string {
 	secret := os.Getenv("CLIENT_SECRET")
-	if secret == "" {
-		secret = "eHcyZAhY762tV9xmzyIjippj"
-	}
 	return &secret
 }
 
