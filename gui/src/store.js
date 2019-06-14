@@ -63,11 +63,13 @@ export default new Vuex.Store({
                 return
             }  
             var errorMsg = error
-            if (error && error.response && error.response.data) {
-                errorMsg = error.response.data
+            if (error && error.response && error.response.statusText) {
+                errorMsg = error.response.statusText
             } else if (error && error.msg){
                 errorMsg = error.msg
-            }            
+            } else if (error && error.message){
+                errorMsg = error.message
+            }                       
             var type = 'error'
             if (error && error.type){
                 type = error.type

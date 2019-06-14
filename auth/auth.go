@@ -97,6 +97,7 @@ func checkToken(tokenString string) error {
 		ctx:          ctx,
 	}
 
+	log.Println("Verifier.Verify")
 	idToken, err := a.provider.Verifier(oidcConfig).Verify(a.ctx, tokenString)
 	if err != nil {
 		log.Println("Error: Could not decode token", err)
@@ -112,6 +113,7 @@ func checkToken(tokenString string) error {
 	}
 
 	evalStr := *getClaimsEval()
+	log.Println("CLAIMS:", evalStr)
 	if evalStr != "" {
 		out, err := expr.Eval(evalStr, claimsMap)
 		if err != nil {
@@ -126,6 +128,7 @@ func checkToken(tokenString string) error {
 		}
 	}
 
+	log.Println("checkToken -> OK")
 	return nil
 }
 

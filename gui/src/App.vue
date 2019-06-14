@@ -140,17 +140,23 @@
             },
 
             login() {
-                SecurityService.signIn()
+                var self = this
+                SecurityService.signIn().then(r => {
+                    console.log("login", r)
+                }, err => {
+                    self.$store.dispatch('setError', err)
+                })
             },
 
             logoff() {
+                var self = this
                 SecurityService.signOut().then(()=>{
-                    this.isLoggedIn = false
-                    this.$router.push("/")
+                    self.isLoggedIn = false
+                    self.$router.push("/")
                 }, err => {
-                    this.isLoggedIn = false
+                    self.isLoggedIn = false
                     self.$store.dispatch('setError', err)
-                    this.$router.push("/")
+                    self.$router.push("/")
                 })
             },
         },
@@ -199,23 +205,22 @@
             var self = this
             WebServices.url = window.location.origin
 
+            // manage this.isLoggedIn
             SecurityService.getMgr().then(mgr => {
                 mgr.events.addUserLoaded(user => { 
                     console.log("addUserLoaded", user) 
                     self.checkOn()
-                })
+                }, error => console.log(error))
             
                 mgr.events.addUserSignedOut(() => {
                     console.log("addUserSignedOut")
                     self.isLoggedIn = false
-                })
-
+                },error => console.log(error))
             })
 
 
-
             // update login flag
-            SecurityService.isSignedIn().then(result =>{
+            SecurityService.isSignedIn().then(result => {
                 self.isLoggedIn = result
                 // update tinc status - we need to be logged in for this to work
                 if (result){
