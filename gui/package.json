@@ -17,7 +17,7 @@
     "core-js": "^2.6.9",
     "oidc-client": "^1.7.1",
     "sigma": "^1.2.1",
-    "swagger-ui": "^3.22.3",
+    "swagger-ui": "^3.23.11",
     "vue": "^2.6.10",
     "vue-chartkick": "^0.5.1",
     "vue-pdf": "^4.0.7",
